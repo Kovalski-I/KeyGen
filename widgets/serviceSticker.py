@@ -65,10 +65,3 @@ class ServiceSticker(QGraphicsItem):
     @staticmethod
     def remainder_div(a, b):
         return (int(a / b), a % b)
-
-    @staticmethod
-    def module(number):
-        return number + (-2) * number if number < 0 else number
-
-    def index(self):
-        return self._index

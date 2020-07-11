@@ -1,17 +1,29 @@
 # 3rd party imports
-from PyQt5.QtWidgets import QGraphicsScene
+from PyQt5.QtWidgets import QGraphicsScene, QLabel
 
 class GraphicsScene(QGraphicsScene):
     def __init__(self):
         super().__init__()
 
-        self.positioning = dict()
+        self.noCardsText = QLabel(
+            'There are no cards\n' + 'Click \"+\" to add service card'
+        )
+        self.noCardsText.setStyleSheet(
+            '''QLabel{
+                   font-family: Quicksand;
+                   background-color: #212121;
+                   font-size: 36px;
+	               color: #fafafa;
+               }'''
+        )
 
     def update(self):
-        super().update()
+        noCardsTextProxy = None
 
-        # for i in range(1, len(self.items()), 2):
-        #     currentItem = self.items()[i]
-        #     currentItem.setIndex(
-        #         self.module(currentItem.index() - len(self.items()))
-        #     )
+        if len(self.items()) == 0:
+            noCardsTextProxy = self.addWidget(self.noCardsText)
+            noCardsTextProxy.setPos(0, 0)
+        else:
+            self.removeItem(noCardsTextProxy)
+
+        super().update()

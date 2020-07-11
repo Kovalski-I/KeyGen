@@ -36,15 +36,17 @@ class MainWindow(QWidget):
 
         self.scene = GraphicsScene()
 
-        # for i in range(14):
-        #     self.item = ServiceSticker(
-        #         f'Google{i + 1}', 'tim@mail.com', index = i
-        #     )
-        #     self.scene.addItem(self.item)
+        for i in range(14):
+            self.item = ServiceSticker(
+                f'Google{i + 1}', 'tim@mail.com', index = i
+            )
+            self.scene.addItem(self.item)
+            self.scene.update()
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphicsView.setScene(self.scene)
         self.graphicsView.centerOn(0, 0)
+        self.scene.update()
 
         self.contextMenu = ContextMenu()
 
@@ -67,13 +69,13 @@ class MainWindow(QWidget):
 
     def paintEvent(self, ev):
         self.writeToGlobal(QRectF(self.graphicsView.geometry()))
-        self.setSceneHeight()
+        self.setSceneRectangle()
 
     @staticmethod
     def writeToGlobal(data):
         glob.tempList[0] = data
 
-    def setSceneHeight(self):
+    def setSceneRectangle(self):
         viewWidth = self.graphicsView.width()
         viewHeight = self.graphicsView.height()
         boundingRectHeight = self.scene.itemsBoundingRect().height()
