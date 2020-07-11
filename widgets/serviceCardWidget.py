@@ -17,7 +17,7 @@ class ServiceCardWidget(QWidget):
 
         self.setStyleSheet(
             '''QWidget{
-                background-color: ''' + '{0}'.format(color) + '''
+                background-color: ''' + '{0}'.format(color) + ''';
             }'''
         )
 

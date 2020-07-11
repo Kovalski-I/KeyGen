@@ -4,7 +4,7 @@ from PyQt5.QtCore import QRectF
 # python imports
 import math
 
-tempList = [QRectF(0, 0, 816, 409), None]
+tempList = [QRectF(0, 0, 816, 409)]
 
 ''' This method does animation for the object which has QPropertyAnimation '''
 def doAnimation(animation, widget, square_ratio):
