@@ -8,8 +8,10 @@ class ContextMenu(QMenu):
     def __init__(self):
         super().__init__()
 
-        actions = [self.addAction('Change Master Password'),
-                  self.addAction('Import KeyGen Data'),
-                  self.addAction('Export KeyGen Data')]
+        self.actions = [
+            self.addAction('Change master password'),
+            self.addAction('Change service cards\' size'),
+            self.addAction('Import json')
+        ]
 
-        self.insertSeparator(actions[1])
+        self.insertSeparator(self.actions[2])

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>260</height>
+    <width>584</width>
+    <height>323</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
           <string notr="true">QLabel {
 	color: #fafafa;
 	font-family: quicksand;
-	font-size: 24px;
+	font-size: 32px;
 }</string>
          </property>
          <property name="text">
@@ -86,7 +86,7 @@
           <string notr="true">QLabel {
 	color: #fafafa;
 	font-family: quicksand;
-	font-size: 14px;
+	font-size: 18px;
 }</string>
          </property>
          <property name="text">
@@ -144,7 +144,7 @@ open KeyGen</string>
           <string notr="true">QLineEdit {
 	background-color: #FFFFFF;
 	font-family: url(:/fonts/sourceSansPro.ttf);
-	font-size: 12px;
+	font-size: 20px;
 }</string>
          </property>
          <property name="echoMode">
@@ -204,7 +204,7 @@ open KeyGen</string>
           <string notr="true">QLineEdit {
 	background-color: #FFFFFF;
 	font-family: url(:/fonts/sourceSansPro.ttf);
-	font-size: 12px;
+	font-size: 20px;
 }</string>
          </property>
          <property name="echoMode">
@@ -264,7 +264,7 @@ open KeyGen</string>
           <string notr="true">QLineEdit {
 	background-color: #FFFFFF;
 	font-family: url(:/fonts/sourceSansPro.ttf);
-	font-size: 12px;
+	font-size: 20px;
 }</string>
          </property>
          <property name="placeholderText">

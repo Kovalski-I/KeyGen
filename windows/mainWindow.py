@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5 import uic
 
 # python imports
+import json
 import math
 import os
 
@@ -13,6 +14,8 @@ from widgets.contextMenu import ContextMenu
 from widgets.graphicsScene import GraphicsScene
 from widgets.serviceSticker import ServiceSticker
 from windows.addWindow import AddWindow
+from windows.setWindow import SetWindow
+from windows.masterPassword import MasterPasswordWindow
 import resources
 import glob
 
@@ -20,10 +23,10 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
+        # loading window ui
         uic.loadUi(os.getcwd() + "\\ui\\mainWindow.ui", self)
 
         PREFIX = '   ' # 3 SPACES
-
         self.searchBar.setText(PREFIX)
 
         # creating animations
@@ -35,20 +38,11 @@ class MainWindow(QWidget):
         )
 
         self.scene = GraphicsScene()
-
-        for i in range(14):
-            self.item = ServiceSticker(
-                f'Google{i + 1}', 'tim@mail.com', index = i
-            )
-            self.scene.addItem(self.item)
-            self.scene.update()
+        self.contextMenu = ContextMenu()
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphicsView.setScene(self.scene)
         self.graphicsView.centerOn(0, 0)
-        self.scene.update()
-
-        self.contextMenu = ContextMenu()
 
         # assigning events handlers
         self.searchBar.textChanged.connect(
@@ -67,13 +61,38 @@ class MainWindow(QWidget):
             )
         )
 
+        self.readJson()
+
+    def readJson(self):
+        json_data = json.loads(open('keygen.json', 'rt').read())
+
+        for service_name, data in json_data['serviceCards'].items():
+            serviceSticker = ServiceSticker(
+                service_name, data['login'], index = data['index']
+            )
+            self.scene.addItem(serviceSticker)
+
+        if json_data['firstOpen']:
+            setPasswordWindow = SetWindow(parent = self)
+            setPasswordWindow.setWindowModality(Qt.ApplicationModal)
+            setPasswordWindow.show()
+
+            json_data['firstOpen'] = False
+        else:
+            masterPasswordWindow = MasterPasswordWindow(parent = self)
+            # masterPasswordWindow.setWindowModality(Qt.ApplicationModal)
+            masterPasswordWindow.show()
+
+        # updating keygen.json
+        buffer = open('keygen.json', 'wt')
+        buffer.write(json.dumps(json_data, sort_keys = False, indent = 2))
+        buffer.close()
+
+        self.scene.update()
+
     def paintEvent(self, ev):
         self.writeToGlobal(QRectF(self.graphicsView.geometry()))
         self.setSceneRectangle()
-
-    @staticmethod
-    def writeToGlobal(data):
-        glob.tempList[0] = data
 
     def setSceneRectangle(self):
         viewWidth = self.graphicsView.width()
@@ -101,7 +120,8 @@ class MainWindow(QWidget):
 
     def crownToolButtonClicked(self):
         glob.doAnimation(self.crownToolButtonAnim, self.crownToolButton, 3)
-        self.contextMenu.exec_(self.calculateCoordinates())
+
+        chosen_action = self.contextMenu.exec_(self.calculateCoordinates())
 
     def plusToolButtonClicked(self):
         glob.doAnimation(self.plusToolButtonAnim, self.plusToolButton, 3)
@@ -126,6 +146,10 @@ class MainWindow(QWidget):
         return QPoint(
             final_coordinates[0], final_coordinates[1]
         )
+
+    @staticmethod
+    def writeToGlobal(data):
+        glob.tempList[0] = data
 
 if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication
