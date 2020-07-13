@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1134</width>
+    <width>1138</width>
     <height>672</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
     <normaloff>:/icons/app_icon.png</normaloff>:/icons/app_icon.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget {
+   <string notr="true">QWidget#mainWindow{
 	background-color: #212121;
 }</string>
   </property>
@@ -295,6 +295,7 @@
         <widget class="QGraphicsView" name="graphicsView">
          <property name="styleSheet">
           <string notr="true">QGraphicsView {
+	background-color: #212121;
 	border: none;	
 }</string>
          </property>

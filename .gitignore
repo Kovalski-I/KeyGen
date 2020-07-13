@@ -5,4 +5,5 @@ resources/
 structure.txt
 resources.qrc
 style.qss
-font.py
+test.json
+script.py

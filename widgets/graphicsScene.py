@@ -5,25 +5,29 @@ class GraphicsScene(QGraphicsScene):
     def __init__(self):
         super().__init__()
 
-        self.noCardsText = QLabel(
-            'There are no cards\n' + 'Click \"+\" to add service card'
-        )
-        self.noCardsText.setStyleSheet(
-            '''QLabel{
-                   font-family: Quicksand;
-                   background-color: #212121;
-                   font-size: 36px;
-	               color: #fafafa;
-               }'''
-        )
+        self.labelStyleSheet = '''QLabel{
+               font-family: Quicksand;
+               background-color: #212121;
+               font-size: 36px;
+               color: #fafafa;
+           }'''
+
+        self.serviceStickers = []
 
     def update(self):
-        noCardsTextProxy = None
+        self.serviceStickers = []
+        for item in self.items():
+            if item.__class__.__name__ == 'ServiceSticker':
+                self.serviceStickers.append(item)
 
-        if len(self.items()) == 0:
-            noCardsTextProxy = self.addWidget(self.noCardsText)
-            noCardsTextProxy.setPos(0, 0)
-        else:
+        noCardsTextProxy = None
+        if len(self.serviceStickers) != 0:
             self.removeItem(noCardsTextProxy)
+        else:
+            label = QLabel(
+                'There are no cards\n' + 'Click \"+\" to add service card'
+            )
+            label.setStyleSheet(self.labelStyleSheet)
+            noCardsTextProxy = self.addWidget(label)
 
         super().update()

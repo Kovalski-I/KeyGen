@@ -13,17 +13,17 @@ from widgets.messageBox import MessageBox
 import glob
 
 class SetWindow(QDialog):
-    def __init__(self, parent):
+    def __init__(self, parent, closable = False):
         super().__init__(parent = parent)
 
         # loading ui from ui\greetWindow.ui
         uic.loadUi(os.getcwd() + "\\ui\\setWindow.ui", self)
 
-        self.setWindowTitle('Create Master Password')
+        self.setWindowTitle('Set Master Password')
         self.setModal(True)
 
         # bool of whether the entered passswords are correct
-        self.requirements_passed = False
+        self.requirements_passed = closable
 
         # creating messageBox
         self.messageBox = MessageBox(parent = self)
@@ -59,10 +59,10 @@ class SetWindow(QDialog):
                         self.requirements_passed = True
                         # writing hint and encoded password to your_keygen.json
                         self.dumpToJson()
+                        self.close()
 
         self.messageBox.messageText.setText(messageText)
         self.messageBox.show()
-        self.close()
 
     def dumpToJson(self):
         json_data = json.loads(open('keygen.json', 'rt').read())

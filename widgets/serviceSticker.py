@@ -20,12 +20,12 @@ class ServiceSticker(QGraphicsItem):
         )
         self._index = index
 
-        self.widget = ServiceCardWidget(serviceName, login, self._color)
+        self.widget = ServiceCardWidget(
+            serviceName, login, self._color
+        )
         self.proxyWidget = QGraphicsProxyWidget(self)
         self.anim = QPropertyAnimation(self.proxyWidget, b'geometry')
         self.proxyWidget.setWidget(self.widget)
-
-        self.serviceName = serviceName
 
     def boundingRect(self):
         viewRect = glob.tempList[0]
@@ -52,15 +52,18 @@ class ServiceSticker(QGraphicsItem):
                 y_counter += 1
 
         return QRectF(
-                   x_counter * (self._width + x_padding + min_x_padding),
-                   y_counter * (y_padding + self._height),
-                   self._width, self._height
-               )
+            x_counter * (self._width + x_padding + min_x_padding),
+            y_counter * (y_padding + self._height),
+            self._width, self._height
+        )
 
     def paint(self, painter, option, widget):
         self.proxyWidget.setPos(
             self.boundingRect().x(), self.boundingRect().y()
         )
+
+    def geometry(self):
+        return (self._width, self._height)
 
     @staticmethod
     def remainder_div(a, b):

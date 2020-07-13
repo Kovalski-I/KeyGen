@@ -46,7 +46,7 @@
 }</string>
          </property>
          <property name="text">
-          <string>Create master password</string>
+          <string>Set master password</string>
          </property>
         </widget>
        </item>

@@ -1,6 +1,6 @@
 # 3rd party imports
 from PyQt5.QtWidgets import QWidget, QLabel
-from PyQt5.QtCore import QPropertyAnimation
+from PyQt5.QtCore import QPropertyAnimation, Qt
 from PyQt5 import uic
 
 # python imports
@@ -13,33 +13,49 @@ import glob
 class ServiceCardWidget(QWidget):
     def __init__(self, serviceName, login, color):
         super().__init__()
+
         uic.loadUi(os.getcwd() + '\\ui\\serviceCardWidget.ui', self)
 
+        self.setMinimumSize(210, 135)
+        self.setMaximumSize(350, 200)
         self.setStyleSheet(
             '''QWidget{
                 background-color: ''' + '{0}'.format(color) + ''';
             }'''
         )
 
+        self.setWindowModality(Qt.ApplicationModal)
         self.serviceLabel.setText(serviceName)
         self.loginLabel.setText(login)
 
-        self.editToolButtonAnim = QPropertyAnimation(self.editToolButton, b'geometry')
-        self.copyToolButtonAnim = QPropertyAnimation(self.copyToolButton, b'geometry')
-        self.deleteToolButtonAnim = QPropertyAnimation(self.deleteToolButton, b'geometry')
+        self.editToolButtonAnim = QPropertyAnimation(
+            self.editToolButton, b'geometry'
+        )
+        self.copyToolButtonAnim = QPropertyAnimation(
+            self.copyToolButton, b'geometry'
+        )
+        self.deleteToolButtonAnim = QPropertyAnimation(
+            self.deleteToolButton, b'geometry'
+        )
 
         self.editToolButton.clicked.connect(self.editToolButtonClicked)
         self.copyToolButton.clicked.connect(self.copyToolButtonClicked)
         self.deleteToolButton.clicked.connect(self.deleteToolButtonClicked)
 
         self.editToolButtonAnim.finished.connect(
-            lambda: self.editToolButton.clicked.connect(self.editToolButtonClicked)
+            lambda: self.editToolButton.clicked.connect(
+                self.editToolButtonClicked
+            )
         )
         self.copyToolButtonAnim.finished.connect(
-            lambda: self.copyToolButton.clicked.connect(self.copyToolButtonClicked)
+            lambda: self.copyToolButton.clicked.connect(
+                self.copyToolButtonClicked
+            )
         )
         self.deleteToolButtonAnim.finished.connect(
-            lambda: self.deleteToolButton.clicked.connect(self.deleteToolButtonClicked)
+            lambda: self.deleteToolButton.clicked.connect(
+                self.deleteToolButtonClicked
+            )
         )
 
     def editToolButtonClicked(self):

@@ -6,7 +6,6 @@ from PyQt5 import uic
 
 # python imports
 import json
-import math
 import os
 
 # local imports
@@ -27,6 +26,7 @@ class MainWindow(QWidget):
         uic.loadUi(os.getcwd() + "\\ui\\mainWindow.ui", self)
 
         PREFIX = '   ' # 3 SPACES
+
         self.searchBar.setText(PREFIX)
 
         # creating animations
@@ -38,7 +38,7 @@ class MainWindow(QWidget):
         )
 
         self.scene = GraphicsScene()
-        self.contextMenu = ContextMenu()
+        self.contextMenu = ContextMenu(parent = self)
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphicsView.setScene(self.scene)
@@ -74,13 +74,11 @@ class MainWindow(QWidget):
 
         if json_data['firstOpen']:
             setPasswordWindow = SetWindow(parent = self)
-            setPasswordWindow.setWindowModality(Qt.ApplicationModal)
             setPasswordWindow.show()
 
             json_data['firstOpen'] = False
         else:
             masterPasswordWindow = MasterPasswordWindow(parent = self)
-            # masterPasswordWindow.setWindowModality(Qt.ApplicationModal)
             masterPasswordWindow.show()
 
         # updating keygen.json
@@ -122,6 +120,7 @@ class MainWindow(QWidget):
         glob.doAnimation(self.crownToolButtonAnim, self.crownToolButton, 3)
 
         chosen_action = self.contextMenu.exec_(self.calculateCoordinates())
+        self.contextMenu.executeAction(chosen_action)
 
     def plusToolButtonClicked(self):
         glob.doAnimation(self.plusToolButtonAnim, self.plusToolButton, 3)

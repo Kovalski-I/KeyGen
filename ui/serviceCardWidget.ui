@@ -62,7 +62,7 @@
 }</string>
            </property>
            <property name="text">
-            <string>none</string>
+            <string>None</string>
            </property>
           </widget>
          </item>
@@ -106,7 +106,7 @@
 }</string>
            </property>
            <property name="text">
-            <string>none</string>
+            <string>None</string>
            </property>
           </widget>
          </item>

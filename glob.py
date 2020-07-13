@@ -6,7 +6,11 @@ import math
 
 tempList = [QRectF(0, 0, 816, 409)]
 
-''' This method does animation for the object which has QPropertyAnimation '''
+''' This method does animation for the object which has QPropertyAnimation
+    animation - QPropertyAnimation instance
+    widget - widget which is being animated
+    square_ratio - int of how much widget's geometry should be decreased while
+    animation'''
 def doAnimation(animation, widget, square_ratio):
     end_size = []
     size = [widget.geometry().width(), widget.geometry().height()]
