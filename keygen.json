@@ -3,36 +3,10 @@
         "FILE": "FILE TO RESTORE KEYGEN DATA. DO NOT EDIT OR SHARE IT",
         "PASSWORDS": "PASSWORDS ARE ENCODED"
     },
-    "firstOpen": false,
+    "firstOpen": true,
     "enterData": {
-        "hint": "qwerty",
-        "masterPassword": "cXdlcnR5"
+        "hint": null,
+        "masterPassword": null
     },
-    "serviceCards": {
-        "GitHub": {
-            "index": 1,
-            "login": "Kovalskii-I",
-            "password": "OXF5aDBtNWI="
-        },
-        "Google": {
-            "index": 0,
-            "login": "Main account",
-            "password": "dGgyOTBvOGk="
-        },
-        "Apple": {
-            "index": 3,
-            "login": "tima.koval@icloud.com",
-            "password": "Ymx3ZzU2MWg="
-        },
-        "1Password": {
-            "index": 4,
-            "login": "IPhone",
-            "password": "cXdlcnR5"
-        },
-        "PornHub": {
-            "index": 2,
-            "login": "With premium",
-            "password": "ZW12MW1vNHg="
-        }
-    }
+    "serviceCards": {}
 }

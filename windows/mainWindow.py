@@ -63,17 +63,15 @@ class MainWindow(QWidget):
             )
         )
 
-        self.readJson()
-
-        # try:
-        #     self.readJson()
-        # except:
-        #     messageBox = MessageBox(parent = self, closable = False)
-        #     messageBox.messageText.setText(
-        #         'Cannot load keygen.json\nbecause it is corrupted'
-        #     )
-        #     messageBox.show()
-        #     self._scene.update()
+        try:
+            self.readJson()
+        except:
+            messageBox = MessageBox(parent = self, closable = False)
+            messageBox.messageText.setText(
+                'Cannot load keygen.json\nbecause it is corrupted'
+            )
+            messageBox.show()
+            self._scene.update()
 
     def readJson(self):
         json_data = json.loads(open('keygen.json', 'rt').read())
