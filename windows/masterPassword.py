@@ -63,7 +63,7 @@ class MasterPasswordWindow(QDialog):
             self.incorrect_times += 1
 
     def closeEvent(self, ev):
-        ev.accept() if self.correct_password_entered else ev.ignore()
+        ev.accept() if self.correct_password_entered else self.parent().close()
 
 if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication

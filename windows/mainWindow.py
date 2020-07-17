@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5 import uic
 
 # python imports
+import base64
 import json
 import os
 
@@ -12,6 +13,7 @@ import os
 from widgets.contextMenu import ContextMenu
 from widgets.graphicsScene import GraphicsScene
 from widgets.serviceSticker import ServiceSticker
+from widgets.messageBox import MessageBox
 from windows.addWindow import AddWindow
 from windows.setWindow import SetWindow
 from windows.masterPassword import MasterPasswordWindow
@@ -37,11 +39,11 @@ class MainWindow(QWidget):
             self.plusToolButton, b'geometry'
         )
 
-        self.scene = GraphicsScene()
+        self._scene = GraphicsScene()
         self.contextMenu = ContextMenu(parent = self)
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.graphicsView.setScene(self.scene)
+        self.graphicsView.setScene(self._scene)
         self.graphicsView.centerOn(0, 0)
 
         # assigning events handlers
@@ -63,14 +65,26 @@ class MainWindow(QWidget):
 
         self.readJson()
 
+        # try:
+        #     self.readJson()
+        # except:
+        #     messageBox = MessageBox(parent = self, closable = False)
+        #     messageBox.messageText.setText(
+        #         'Cannot load keygen.json\nbecause it is corrupted'
+        #     )
+        #     messageBox.show()
+        #     self._scene.update()
+
     def readJson(self):
         json_data = json.loads(open('keygen.json', 'rt').read())
 
         for service_name, data in json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
-                service_name, data['login'], index = data['index']
+                service_name, data['login'], index = data['index'],
+                password = data['password'],
+                parent = self
             )
-            self.scene.addItem(serviceSticker)
+            self.scene().addItem(serviceSticker)
 
         if json_data['firstOpen']:
             setPasswordWindow = SetWindow(parent = self)
@@ -83,10 +97,23 @@ class MainWindow(QWidget):
 
         # updating keygen.json
         buffer = open('keygen.json', 'wt')
-        buffer.write(json.dumps(json_data, sort_keys = False, indent = 2))
+        buffer.write(json.dumps(json_data, sort_keys = False, indent = 4))
         buffer.close()
 
-        self.scene.update()
+        self.scene().update()
+
+    def addServiceCard(self, name, login, index, password):
+        print('index: ' + str(index))
+
+        scene = self.scene()
+        serviceCard = ServiceSticker(
+            name, login,
+            index = index,
+            password = password,
+            parent = self
+        )
+        scene.addItem(serviceCard)
+        scene.update()
 
     def paintEvent(self, ev):
         self.writeToGlobal(QRectF(self.graphicsView.geometry()))
@@ -95,7 +122,7 @@ class MainWindow(QWidget):
     def setSceneRectangle(self):
         viewWidth = self.graphicsView.width()
         viewHeight = self.graphicsView.height()
-        boundingRectHeight = self.scene.itemsBoundingRect().height()
+        boundingRectHeight = self.scene().itemsBoundingRect().height()
         sceneWidth = viewWidth
 
         if boundingRectHeight > viewHeight:
@@ -103,7 +130,7 @@ class MainWindow(QWidget):
         else:
             sceneHeight = viewHeight
 
-        self.scene.setSceneRect(
+        self.scene().setSceneRect(
             QRectF(
                 QPoint(),
                 QPoint(
@@ -145,6 +172,32 @@ class MainWindow(QWidget):
         return QPoint(
             final_coordinates[0], final_coordinates[1]
         )
+
+    def saveData(self):
+        json_data = json.loads(open('keygen.json', 'rt').read())
+        for card in reversed(self.scene().serviceCards()):
+            cardData = card.data()
+
+            serviceName = cardData['serviceName']
+            index = cardData['index']
+            login = cardData['login']
+            password = cardData['password']
+
+            json_data['serviceCards'][serviceName] = {
+                'index': index,
+                'login': login,
+                'password': base64.b64encode(password.encode()).decode()
+            }
+
+        stream = open('keygen.json', 'wt')
+        stream.write(json.dumps(json_data, sort_keys = False, indent = 4))
+        stream.close()
+
+    def closeEvent(self, ev):
+        self.saveData()
+
+    def scene(self):
+        return self._scene
 
     @staticmethod
     def writeToGlobal(data):

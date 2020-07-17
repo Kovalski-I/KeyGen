@@ -68,7 +68,7 @@
        <item>
         <widget class="QToolButton" name="plusToolButton">
          <property name="toolTip">
-          <string>add new service card</string>
+          <string>Add new service card</string>
          </property>
          <property name="whatsThis">
           <string>Add new service</string>
@@ -114,7 +114,7 @@
        <item>
         <widget class="QToolButton" name="crownToolButton">
          <property name="toolTip">
-          <string>settings</string>
+          <string>Settings</string>
          </property>
          <property name="whatsThis">
           <string>Settings</string>

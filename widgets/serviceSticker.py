@@ -10,7 +10,7 @@ from widgets.serviceCardWidget import ServiceCardWidget
 import glob
 
 class ServiceSticker(QGraphicsItem):
-    def __init__(self, serviceName, login, index):
+    def __init__(self, serviceName, login, index, password, parent):
         super().__init__()
 
         self._width = 270.0
@@ -19,9 +19,13 @@ class ServiceSticker(QGraphicsItem):
             ['#244f26', '#875307', '#01434b']
         )
         self._index = index
+        self._serviceName = serviceName
+        self._login = login
+        self._password = password
+        self._parent = parent
 
         self.widget = ServiceCardWidget(
-            serviceName, login, self._color
+            serviceName, login, self._color, parent = self
         )
         self.proxyWidget = QGraphicsProxyWidget(self)
         self.anim = QPropertyAnimation(self.proxyWidget, b'geometry')
@@ -42,7 +46,7 @@ class ServiceSticker(QGraphicsItem):
         y_padding = 40
 
         y_counter = 0
-        line_pos = len(self.scene().items()) / 2 - self._index
+        line_pos = len(self.parent().scene().serviceCards()) - self._index
         while True:
             if items_per_line - line_pos >= 0:
                 x_counter = line_pos - 1
@@ -62,8 +66,16 @@ class ServiceSticker(QGraphicsItem):
             self.boundingRect().x(), self.boundingRect().y()
         )
 
-    def geometry(self):
-        return (self._width, self._height)
+    def data(self):
+        return {
+            'serviceName': self._serviceName,
+            'index': self._index,
+            'login': self._login,
+            'password': self._password
+        }
+
+    def parent(self):
+        return self._parent
 
     @staticmethod
     def remainder_div(a, b):

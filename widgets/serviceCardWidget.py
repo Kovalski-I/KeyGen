@@ -7,11 +7,12 @@ from PyQt5 import uic
 import os
 
 # local imports
+from windows.addWindow import AddWindow
 import resources
 import glob
 
 class ServiceCardWidget(QWidget):
-    def __init__(self, serviceName, login, color):
+    def __init__(self, serviceName, login, color, parent):
         super().__init__()
 
         uic.loadUi(os.getcwd() + '\\ui\\serviceCardWidget.ui', self)
@@ -24,7 +25,8 @@ class ServiceCardWidget(QWidget):
             }'''
         )
 
-        self.setWindowModality(Qt.ApplicationModal)
+        self._parent = parent
+
         self.serviceLabel.setText(serviceName)
         self.loginLabel.setText(login)
 
@@ -61,11 +63,34 @@ class ServiceCardWidget(QWidget):
     def editToolButtonClicked(self):
         glob.doAnimation(self.editToolButtonAnim, self.editToolButton, 4)
 
+        # showing addWindow but with the contents of service card
+        stickerData = self.parent().data()
+
+        mainWindow = self.parent().parent()
+
+        self.changeWindow = AddWindow(
+            parent = mainWindow, edit = True, card = self.parent()
+        )
+        self.changeWindow.serviceEdit.setText(
+            stickerData['serviceName']
+        )
+        self.changeWindow.loginEdit.setText(
+            stickerData['login']
+        )
+        self.changeWindow.passwordEdit.setText(
+            stickerData['password']
+        )
+
+        self.changeWindow.show()
+
     def copyToolButtonClicked(self):
         glob.doAnimation(self.copyToolButtonAnim, self.copyToolButton, 4)
 
     def deleteToolButtonClicked(self):
         glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
+
+    def parent(self):
+        return self._parent
 
 if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication

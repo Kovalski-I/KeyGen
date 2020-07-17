@@ -12,22 +12,30 @@ class GraphicsScene(QGraphicsScene):
                color: #fafafa;
            }'''
 
-        self.serviceStickers = []
+        self._serviceCards = []
+        self.noCardsTextProxy = None
 
     def update(self):
-        self.serviceStickers = []
+        self._serviceCards = []
         for item in self.items():
             if item.__class__.__name__ == 'ServiceSticker':
-                self.serviceStickers.append(item)
+                self._serviceCards.append(item)
 
-        noCardsTextProxy = None
-        if len(self.serviceStickers) != 0:
-            self.removeItem(noCardsTextProxy)
+        if len(self.serviceCards()) != 0:
+            self.removeItem(self.noCardsTextProxy)
         else:
             label = QLabel(
-                'There are no cards\n' + 'Click \"+\" to add service card'
+                'There are no cards\n' + 'Click "+" to add service card'
             )
             label.setStyleSheet(self.labelStyleSheet)
-            noCardsTextProxy = self.addWidget(label)
+            self.noCardsTextProxy = self.addWidget(label)
 
         super().update()
+
+    def delete(self, index):
+        for card in self.serviceCards():
+            if card.data()['index'] == index:
+                self.removeItem(card)
+
+    def serviceCards(self):
+        return self._serviceCards

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
-    <height>360</height>
+    <width>664</width>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,7 +55,7 @@
           <widget class="QLineEdit" name="serviceEdit">
            <property name="styleSheet">
             <string notr="true">QLineEdit {
-	font-family: quicksand regular;
+	font-family: quicksand;
 	font-size: 32px;
 	border: none;
 	color: #fafafa;
@@ -148,7 +148,7 @@
               <string notr="true">QLineEdit {
 	background-color: #FFFFFF;
 	font-family: url(:/fonts/sourceSansPro.ttf);
-	font-size: 12px;
+	font-size: 20px;
 }</string>
              </property>
             </widget>
@@ -184,7 +184,7 @@
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="3,80,2,2">
+        <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,80,2,2">
          <item>
           <spacer name="horizontalSpacer_13">
            <property name="orientation">
@@ -218,7 +218,7 @@
              <item>
               <widget class="QToolButton" name="caseToolButton">
                <property name="toolTip">
-                <string>uppercase/lowercase</string>
+                <string>Uppercase/Lowercase</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">QToolButton {
@@ -273,7 +273,7 @@
                 <string notr="true">QLineEdit {
 	background-color: #FFFFFF;
 	font-family: url(:/fonts/sourceSansPro.ttf);
-	font-size: 12px;
+	font-size: 20px;
 }</string>
                </property>
               </widget>
@@ -329,7 +329,7 @@
              <item>
               <widget class="QLabel" name="generatePasswordLabel">
                <property name="toolTip">
-                <string>click on the icon to generate password</string>
+                <string>Click on the icon to generate password</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">QLabel {
