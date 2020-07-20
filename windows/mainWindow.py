@@ -7,6 +7,7 @@ from PyQt5 import uic
 # python imports
 import base64
 import json
+import re
 import os
 
 # local imports
@@ -39,8 +40,10 @@ class MainWindow(QWidget):
             self.plusToolButton, b'geometry'
         )
 
-        self._scene = GraphicsScene()
+        self._scene = GraphicsScene(parent = self)
         self.contextMenu = ContextMenu(parent = self)
+        self.json_data = None
+        self.session_approved = False
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphicsView.setScene(self._scene)
@@ -52,6 +55,7 @@ class MainWindow(QWidget):
         )
         self.crownToolButton.clicked.connect(self.crownToolButtonClicked)
         self.plusToolButton.clicked.connect(self.plusToolButtonClicked)
+
         self.crownToolButtonAnim.finished.connect(
             lambda: self.crownToolButton.clicked.connect(
                 self.crownToolButtonClicked
@@ -64,6 +68,7 @@ class MainWindow(QWidget):
         )
 
         try:
+            self.json_data = json.loads(open('keygen.json', 'rt').read())
             self.readJson()
         except:
             messageBox = MessageBox(parent = self, closable = False)
@@ -71,46 +76,53 @@ class MainWindow(QWidget):
                 'Cannot load keygen.json\nbecause it is corrupted'
             )
             messageBox.show()
-            self._scene.update()
+            self.scene().update()
 
     def readJson(self):
-        json_data = json.loads(open('keygen.json', 'rt').read())
-
-        for service_name, data in json_data['serviceCards'].items():
+        for service_name, data in self.json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
                 service_name, data['login'], index = data['index'],
-                password = data['password'],
+                password = base64.b64decode(
+                    data['password'].encode()
+                ).decode(),
+                color = data['color'],
                 parent = self
             )
             self.scene().addItem(serviceSticker)
 
-        if json_data['firstOpen']:
+        if self.json_data['firstOpen']:
             setPasswordWindow = SetWindow(parent = self)
             setPasswordWindow.show()
-
-            json_data['firstOpen'] = False
         else:
-            masterPasswordWindow = MasterPasswordWindow(parent = self)
-            masterPasswordWindow.show()
+            if not self.session_approved:
+                masterPasswordWindow = MasterPasswordWindow(parent = self)
+                masterPasswordWindow.show()
+                self.session_approved = True
 
         # updating keygen.json
         buffer = open('keygen.json', 'wt')
-        buffer.write(json.dumps(json_data, sort_keys = False, indent = 4))
+        buffer.write(json.dumps(self.json_data, sort_keys = False, indent = 4))
         buffer.close()
 
         self.scene().update()
 
-    def addServiceCard(self, name, login, index, password):
-        print('index: ' + str(index))
-
+    def addServiceCard(self, name, login, index, color, password):
         scene = self.scene()
         serviceCard = ServiceSticker(
             name, login,
             index = index,
             password = password,
+            color = color,
             parent = self
         )
         scene.addItem(serviceCard)
+        self.json_data['serviceCards'][name] = {
+            'index': index,
+            'login': login,
+            'color': color,
+            'password': base64.b64encode(password.encode()).decode()
+        }
+
         scene.update()
 
     def paintEvent(self, ev):
@@ -140,6 +152,29 @@ class MainWindow(QWidget):
 
     def searchBarTextChanged(self, prefix):
         self.leavePrefix(prefix)
+
+        req = self.searchBar.text().strip().lower()
+        scene = self.scene()
+
+        self.scene().clear()
+
+        if req == '':
+            self.readJson()
+            return
+
+        counter = 0
+        for card in scene.serviceCards():
+            data = card.data()
+
+            if re.match(req, data['serviceName'].lower()) is not None:
+                newCard = ServiceSticker(
+                    data['serviceName'], data['login'],
+                    color = data['color'], password = data['password'],
+                    index = counter, parent = self
+                )
+                scene.addItem(newCard)
+                scene.update()
+                counter += 1
 
     def crownToolButtonClicked(self):
         glob.doAnimation(self.crownToolButtonAnim, self.crownToolButton, 3)
@@ -172,23 +207,27 @@ class MainWindow(QWidget):
         )
 
     def saveData(self):
-        json_data = json.loads(open('keygen.json', 'rt').read())
+        self.json_data = json.loads(open('keygen.json', 'rt').read())
+        self.json_data['serviceCards'] = {}
+
         for card in reversed(self.scene().serviceCards()):
             cardData = card.data()
 
             serviceName = cardData['serviceName']
             index = cardData['index']
             login = cardData['login']
+            color = cardData['color']
             password = cardData['password']
 
-            json_data['serviceCards'][serviceName] = {
+            self.json_data['serviceCards'][serviceName] = {
                 'index': index,
                 'login': login,
+                'color': color,
                 'password': base64.b64encode(password.encode()).decode()
             }
 
         stream = open('keygen.json', 'wt')
-        stream.write(json.dumps(json_data, sort_keys = False, indent = 4))
+        stream.write(json.dumps(self.json_data, sort_keys = False, indent = 4))
         stream.close()
 
     def closeEvent(self, ev):

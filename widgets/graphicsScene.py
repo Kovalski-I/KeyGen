@@ -1,8 +1,11 @@
 # 3rd party imports
 from PyQt5.QtWidgets import QGraphicsScene, QLabel
 
+# local imports
+from widgets.serviceSticker import ServiceSticker
+
 class GraphicsScene(QGraphicsScene):
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
 
         self.labelStyleSheet = '''QLabel{
@@ -13,13 +16,14 @@ class GraphicsScene(QGraphicsScene):
            }'''
 
         self._serviceCards = []
+        self._parent = parent
         self.noCardsTextProxy = None
 
     def update(self):
         self._serviceCards = []
         for item in self.items():
             if item.__class__.__name__ == 'ServiceSticker':
-                self._serviceCards.append(item)
+                self.serviceCards().append(item)
 
         if len(self.serviceCards()) != 0:
             self.removeItem(self.noCardsTextProxy)
@@ -36,6 +40,12 @@ class GraphicsScene(QGraphicsScene):
         for card in self.serviceCards():
             if card.data()['index'] == index:
                 self.removeItem(card)
+                break
+
+        self.update()
 
     def serviceCards(self):
         return self._serviceCards
+
+    def parent(self):
+        return self._parent

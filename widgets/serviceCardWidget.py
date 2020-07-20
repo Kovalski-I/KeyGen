@@ -1,5 +1,5 @@
 # 3rd party imports
-from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QWidget, QLabel, QApplication
 from PyQt5.QtCore import QPropertyAnimation, Qt
 from PyQt5 import uic
 
@@ -86,8 +86,15 @@ class ServiceCardWidget(QWidget):
     def copyToolButtonClicked(self):
         glob.doAnimation(self.copyToolButtonAnim, self.copyToolButton, 4)
 
+        QApplication.clipboard().setText(
+            self.parent().data()['password']
+        )
+
     def deleteToolButtonClicked(self):
         glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
+
+        card = self.parent()
+        card.scene().delete(card.data()['index'])
 
     def parent(self):
         return self._parent

@@ -72,6 +72,7 @@ class SetWindow(QDialog):
 
         json_data['enterData']['hint'] = self.hintEdit.text().strip()
         json_data['enterData']['masterPassword'] = encoded_password.decode()
+        json_data['firstOpen'] = False
 
         buffer = open('keygen.json', 'wt')
         buffer.write(json.dumps(json_data, sort_keys = False, indent = 2))
@@ -81,7 +82,7 @@ class SetWindow(QDialog):
         self.pushButton.clicked.connect(self.pushButtonClicked)
 
     def closeEvent(self, ev):
-        ev.accept() if self.requirements_passed else ev.ignore()
+        ev.accept() if self.requirements_passed else self.parent().close()
 
 if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication

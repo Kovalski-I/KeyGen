@@ -15,27 +15,26 @@ class ContextMenu(QMenu):
     def __init__(self, parent):
         super().__init__(parent = parent)
 
+        self._save = self.addAction('Save')
         self._changeMasterPassword = self.addAction(
             'Change master password'
         )
-        # self._changeServiceCardsSize = self.addAction(
-        #     'Change service cards\' size'
-        # )
         self._importJson = self.addAction('Import json')
 
         self.insertSeparator(self._importJson)
 
         self._actions = {
+            id(self._save): self.save,
             id(self._changeMasterPassword): self.changeMasterPassword,
-            # id(self._changeServiceCardsSize): self.changeServiceCardsSize,
             id(self._importJson): self.importJson,
             id(None): lambda: None
         }
 
-        self.chosenSize = None
-
     def executeAction(self, action):
         self.actions()[id(action)]()
+
+    def save(self):
+        self.parent().saveData()
 
     def changeMasterPassword(self):
         setPasswordWindow = SetWindow(
@@ -43,31 +42,21 @@ class ContextMenu(QMenu):
         )
         setPasswordWindow.show()
 
-    # def changeServiceCardsSize(self):
-    #     serviceCardWidget = ServiceCardWidget(
-    #         'Editing Size', 'Close this window if ready', color = 'gray',
-    #         parent = self
-    #     )
-    #     serviceCardWidget.show()
-    #
-    #     chosenSize = self.chosenSize
-    #     print(chosenSize)
-    #     mainWindow = self.parent()
-
     def importJson(self):
         file_name = QFileDialog.getOpenFileName(
             self.parent(), 'Open json', os.getcwd(), 'Json files (*.json)'
         )
+        if file_name[1] == '':
+            return
 
-        self.readJson(file_name[0], self.parent())
-        # try:
-        #     self.readJson(file_name[0], self.parent())
-        # except:
-        #     messageBox = MessageBox(parent = self.parent())
-        #     messageBox.messageText.setText('Wrong json provided')
-        #     messageBox.show()
-        #
-        #     self.parent().scene().update()
+        try:
+            self.readJson(file_name[0], self.parent())
+        except:
+            messageBox = MessageBox(parent = self.parent())
+            messageBox.messageText.setText('Wrong json provided')
+            messageBox.show()
+
+            self.parent().scene().update()
 
     def actions(self):
         return self._actions
@@ -75,7 +64,6 @@ class ContextMenu(QMenu):
     @staticmethod
     def readJson(filename, mainWindow):
         scene = mainWindow.scene()
-
         scene.clear()
 
         json_data = {}
@@ -87,7 +75,8 @@ class ContextMenu(QMenu):
 
         for service_name, data in json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
-                service_name, data['login'], index = data['index']
+                service_name, data['login'], index = data['index'],
+                password = data['password'], color = data['color']
             )
             scene.addItem(serviceSticker)
 

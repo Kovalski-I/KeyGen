@@ -10,14 +10,12 @@ from widgets.serviceCardWidget import ServiceCardWidget
 import glob
 
 class ServiceSticker(QGraphicsItem):
-    def __init__(self, serviceName, login, index, password, parent):
+    def __init__(self, serviceName, login, index, color, password, parent):
         super().__init__()
 
         self._width = 270.0
         self._height = 157.0
-        self._color = random.choice(
-            ['#244f26', '#875307', '#01434b']
-        )
+        self._color = color
         self._index = index
         self._serviceName = serviceName
         self._login = login
@@ -66,11 +64,15 @@ class ServiceSticker(QGraphicsItem):
             self.boundingRect().x(), self.boundingRect().y()
         )
 
+    def setIndex(self, index):
+        self._index = index
+
     def data(self):
         return {
             'serviceName': self._serviceName,
             'index': self._index,
             'login': self._login,
+            'color': self._color,
             'password': self._password
         }
 
