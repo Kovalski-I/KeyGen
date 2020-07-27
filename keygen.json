@@ -3,10 +3,10 @@
         "FILE": "FILE TO RESTORE KEYGEN DATA. DO NOT EDIT OR SHARE IT",
         "PASSWORDS": "PASSWORDS ARE ENCODED"
     },
-    "firstOpen": false,
+    "firstOpen": true,
     "enterData": {
-        "hint": "qwerty",
-        "masterPassword": "cXdlcnR5"
+        "hint": null,
+        "masterPassword": null
     },
     "serviceCards": {}
 }
