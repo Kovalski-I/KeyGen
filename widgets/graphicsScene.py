@@ -19,6 +19,10 @@ class GraphicsScene(QGraphicsScene):
         self._parent = parent
         self.noCardsTextProxy = None
 
+    def addItem(self, item):
+        item.getWidget().doOpacityAnimation()
+        super().addItem(item)
+
     def update(self):
         self._serviceCards = []
         for item in self.items():
@@ -37,11 +41,36 @@ class GraphicsScene(QGraphicsScene):
         super().update()
 
     def delete(self, index):
-        for card in self.serviceCards():
-            if card.data()['index'] == index:
-                self.removeItem(card)
+        serviceCards = self.parent().json()['serviceCards']
+
+        for name, data in serviceCards.items():
+            if data['index'] == index:
+                serviceCards.pop(name)
                 break
 
+        self.serviceCards().clear()
+        self.clear()
+
+        counter = 0
+        json_data = self.parent().json()
+        for name, data in serviceCards.items():
+            newCard = ServiceSticker(
+                name, data['login'],
+                color = data['color'], password = data['password'],
+                index = counter, parent = self.parent()
+            )
+
+            json_data['serviceCards'][name] = {
+                'index': counter,
+                'login': data['login'],
+                'color': data['color'],
+                'password': data['password']
+            }
+            self.addItem(newCard)
+
+            counter += 1
+
+        self.parent().saveData()
         self.update()
 
     def serviceCards(self):

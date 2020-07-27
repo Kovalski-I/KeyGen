@@ -124,6 +124,7 @@ class MainWindow(QWidget):
         }
 
         scene.update()
+        self.saveData()
 
     def paintEvent(self, ev):
         self.writeToGlobal(QRectF(self.graphicsView.geometry()))
@@ -163,12 +164,10 @@ class MainWindow(QWidget):
             return
 
         counter = 0
-        for card in scene.serviceCards():
-            data = card.data()
-
-            if re.match(req, data['serviceName'].lower()) is not None:
+        for name, data in self.json_data['serviceCards'].items():
+            if re.match(req, name.lower()) is not None:
                 newCard = ServiceSticker(
-                    data['serviceName'], data['login'],
+                    name, data['login'],
                     color = data['color'], password = data['password'],
                     index = counter, parent = self
                 )
@@ -207,25 +206,6 @@ class MainWindow(QWidget):
         )
 
     def saveData(self):
-        self.json_data = json.loads(open('keygen.json', 'rt').read())
-        self.json_data['serviceCards'] = {}
-
-        for card in reversed(self.scene().serviceCards()):
-            cardData = card.data()
-
-            serviceName = cardData['serviceName']
-            index = cardData['index']
-            login = cardData['login']
-            color = cardData['color']
-            password = cardData['password']
-
-            self.json_data['serviceCards'][serviceName] = {
-                'index': index,
-                'login': login,
-                'color': color,
-                'password': base64.b64encode(password.encode()).decode()
-            }
-
         stream = open('keygen.json', 'wt')
         stream.write(json.dumps(self.json_data, sort_keys = False, indent = 4))
         stream.close()
@@ -235,6 +215,9 @@ class MainWindow(QWidget):
 
     def scene(self):
         return self._scene
+
+    def json(self):
+        return self.json_data
 
     @staticmethod
     def writeToGlobal(data):

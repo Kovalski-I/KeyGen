@@ -15,7 +15,6 @@ class ContextMenu(QMenu):
     def __init__(self, parent):
         super().__init__(parent = parent)
 
-        self._save = self.addAction('Save')
         self._changeMasterPassword = self.addAction(
             'Change master password'
         )
@@ -24,7 +23,6 @@ class ContextMenu(QMenu):
         self.insertSeparator(self._importJson)
 
         self._actions = {
-            id(self._save): self.save,
             id(self._changeMasterPassword): self.changeMasterPassword,
             id(self._importJson): self.importJson,
             id(None): lambda: None
@@ -32,9 +30,6 @@ class ContextMenu(QMenu):
 
     def executeAction(self, action):
         self.actions()[id(action)]()
-
-    def save(self):
-        self.parent().saveData()
 
     def changeMasterPassword(self):
         setPasswordWindow = SetWindow(

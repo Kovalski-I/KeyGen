@@ -24,11 +24,14 @@ class ServiceCardWidget(QWidget):
                 background-color: ''' + '{0}'.format(color) + ''';
             }'''
         )
+        self.setWindowOpacity(0.0)
 
         self._parent = parent
 
         self.serviceLabel.setText(serviceName)
         self.loginLabel.setText(login)
+
+        self.opacityAnimation = QPropertyAnimation(self, b'windowOpacity')
 
         self.editToolButtonAnim = QPropertyAnimation(
             self.editToolButton, b'geometry'
@@ -59,6 +62,18 @@ class ServiceCardWidget(QWidget):
                 self.deleteToolButtonClicked
             )
         )
+
+    def doOpacityAnimation(self):
+        if self.windowOpacity() == 1.0:
+            startValue = 1.0
+            endValue = 0.0
+        else:
+            startValue = 0.0
+            endValue = 1.0
+        self.opacityAnimation.setStartValue(startValue)
+        self.opacityAnimation.setEndValue(endValue)
+        self.opacityAnimation.setDuration(200)
+        self.opacityAnimation.start()
 
     def editToolButtonClicked(self):
         glob.doAnimation(self.editToolButtonAnim, self.editToolButton, 4)
@@ -92,18 +107,12 @@ class ServiceCardWidget(QWidget):
 
     def deleteToolButtonClicked(self):
         glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
-
-        card = self.parent()
-        card.scene().delete(card.data()['index'])
+        self.doOpacityAnimation()
+        self.opacityAnimation.finished.connect(
+            lambda: self.parent().scene().delete(
+                self.parent().data()['index']
+            )
+        )
 
     def parent(self):
         return self._parent
-
-if __name__ == '__main__':
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    app = QApplication([])
-    win = ServiceCardWidget('none', 'none')
-    win.resize(240, 135)
-    win.show()
-    sys.exit(app.exec_())

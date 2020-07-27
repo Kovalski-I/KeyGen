@@ -44,7 +44,7 @@ class ServiceSticker(QGraphicsItem):
         y_padding = 40
 
         y_counter = 0
-        line_pos = len(self.parent().scene().serviceCards()) - self._index
+        line_pos = len(self.mainWindow().scene().serviceCards()) - self._index
         while True:
             if items_per_line - line_pos >= 0:
                 x_counter = line_pos - 1
@@ -76,8 +76,11 @@ class ServiceSticker(QGraphicsItem):
             'password': self._password
         }
 
-    def parent(self):
+    def mainWindow(self):
         return self._parent
+
+    def getWidget(self):
+        return self.widget
 
     @staticmethod
     def remainder_div(a, b):

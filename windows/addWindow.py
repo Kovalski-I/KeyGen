@@ -21,7 +21,7 @@ class AddWindow(QDialog):
 
         self._edit = edit
         self._card = card
-        self._colors = ['#244f26', '#875307', '#01434b']
+        self._colors = ['#244f26', '#875307', '#01434b', '#902c25', '#4f6670']
         self.color = random.choice(self._colors)
         self.upper = True
 
