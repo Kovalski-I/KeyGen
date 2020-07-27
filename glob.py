@@ -1,9 +1,17 @@
+'''
+Global elite file.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtCore import QRectF
 
 # python imports
 import math
 
+'''
+This list is for sending QGraphicsView's geometry to serviceSticker.py
+'''
 tempList = [QRectF(0, 0, 816, 409)]
 
 ''' This method does animation for the object which has QPropertyAnimation

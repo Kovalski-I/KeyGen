@@ -1,3 +1,9 @@
+'''
+This class implements graphics scene of graphics view on the main window
+where all colored service cards are placed in.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QGraphicsScene, QLabel
 
@@ -15,14 +21,23 @@ class GraphicsScene(QGraphicsScene):
                color: #fafafa;
            }'''
 
+        # list which all service cards on the scene are added to
         self._serviceCards = []
+
         self._parent = parent
+
+        # label which is shown when there are no cards on the scene
         self.noCardsTextProxy = None
 
     def addItem(self, item):
+        # performing animation before item is added to the scene
         item.getWidget().doOpacityAnimation()
         super().addItem(item)
 
+    '''
+    This method determines if there are cards on the scene: updates
+    serviceCards list or shows no cards label.
+    '''
     def update(self):
         self._serviceCards = []
         for item in self.items():
@@ -40,6 +55,11 @@ class GraphicsScene(QGraphicsScene):
 
         super().update()
 
+    '''
+    The method deletes service card with given index from the
+    scene, creates remaining cards assigning them new indexes and adds
+    them to the scene.
+    '''
     def delete(self, index):
         serviceCards = self.parent().json()['serviceCards']
 

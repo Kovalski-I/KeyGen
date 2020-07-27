@@ -1,3 +1,9 @@
+'''
+This class implements a window which requests to fill the
+password when openning the app.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import QPropertyAnimation, Qt
@@ -64,11 +70,3 @@ class MasterPasswordWindow(QDialog):
 
     def closeEvent(self, ev):
         ev.accept() if self.correct_password_entered else self.parent().close()
-
-if __name__ == '__main__':
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    app = QApplication([])
-    win = MasterPasswordWindow()
-    win.show()
-    sys.exit(app.exec_())

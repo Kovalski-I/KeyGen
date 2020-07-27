@@ -1,3 +1,9 @@
+'''
+This class implements message box which can be used in different cases.
+Text of the message box is set after creating an instance.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import Qt, QPropertyAnimation

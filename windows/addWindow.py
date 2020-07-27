@@ -1,3 +1,9 @@
+'''
+This class implements a window, using which service cards
+can be added or edited.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QDialog, QGraphicsScene
 from PyQt5.QtCore import QPropertyAnimation
@@ -98,6 +104,9 @@ class AddWindow(QDialog):
 
         self.passwordEdit.setText(password)
 
+    '''
+    This method changes background color of an add window.
+    '''
     def brushToolButtonClicked(self):
         glob.doAnimation(self.brushToolButtonAnim, self.brushToolButton, 4)
 
@@ -179,11 +188,3 @@ class AddWindow(QDialog):
 
     def brushToolButtonAnimFinished(self):
         self.brushToolButton.clicked.connect(self.brushToolButtonClicked)
-
-if __name__ == '__main__':
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    app = QApplication([])
-    win = AddWindow()
-    win.show()
-    sys.exit(app.exec_())

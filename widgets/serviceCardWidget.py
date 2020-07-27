@@ -1,3 +1,10 @@
+'''
+This class implements widget which is assigned to ServiceSticker
+as a proxy widget.
+
+'''
+
+
 # 3rd party imports
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication
 from PyQt5.QtCore import QPropertyAnimation, Qt
@@ -63,6 +70,9 @@ class ServiceCardWidget(QWidget):
             )
         )
 
+    '''
+    Method determines whether to perform fade or appear animation.
+    '''
     def doOpacityAnimation(self):
         if self.windowOpacity() == 1.0:
             startValue = 1.0
@@ -101,6 +111,7 @@ class ServiceCardWidget(QWidget):
     def copyToolButtonClicked(self):
         glob.doAnimation(self.copyToolButtonAnim, self.copyToolButton, 4)
 
+        # putting password to exchange buffer
         QApplication.clipboard().setText(
             self.parent().data()['password']
         )
@@ -108,6 +119,8 @@ class ServiceCardWidget(QWidget):
     def deleteToolButtonClicked(self):
         glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
         self.doOpacityAnimation()
+
+        # calling delete() of GraphicsScene when animation's finished
         self.opacityAnimation.finished.connect(
             lambda: self.parent().scene().delete(
                 self.parent().data()['index']

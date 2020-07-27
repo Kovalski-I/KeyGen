@@ -1,3 +1,10 @@
+'''
+This class implements a main window of the app.
+The instance of this class is a parent to almost all other objects.
+
+'''
+
+
 # 3rd party imports
 from PyQt5.QtWidgets import QWidget, QGraphicsScene
 from PyQt5.QtCore import QPropertyAnimation, QRectF, QPointF, QPoint, Qt
@@ -27,6 +34,8 @@ class MainWindow(QWidget):
 
         # loading window ui
         uic.loadUi(os.getcwd() + "\\ui\\mainWindow.ui", self)
+
+        self.setMinimumSize(790, 410)
 
         PREFIX = '   ' # 3 SPACES
 
@@ -67,6 +76,7 @@ class MainWindow(QWidget):
             )
         )
 
+        # reading json and displaying error if failed
         try:
             self.json_data = json.loads(open('keygen.json', 'rt').read())
             self.readJson()
@@ -79,6 +89,7 @@ class MainWindow(QWidget):
             self.scene().update()
 
     def readJson(self):
+        # creating cards from data of json
         for service_name, data in self.json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
                 service_name, data['login'], index = data['index'],
@@ -187,11 +198,17 @@ class MainWindow(QWidget):
         addWindow = AddWindow(parent = self)
         addWindow.show()
 
-    ''' This method leaves prefix in self.searchBar QLineEdit '''
+    '''
+    This method leaves prefix in self.searchBar QLineEdit.
+    '''
     def leavePrefix(self, prefix):
         if len(self.searchBar.text()) < 3:
             self.searchBar.setText(prefix)
 
+    '''
+    This method returns a top left point of a context menu appeared
+    when crown toolbutton's clicked.
+    '''
     def calculateCoordinates(self):
         coordinates = [
             self.mapToGlobal(self.crownToolButton.pos()).x(),
@@ -222,11 +239,3 @@ class MainWindow(QWidget):
     @staticmethod
     def writeToGlobal(data):
         glob.tempList[0] = data
-
-if __name__ == '__main__':
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    app = QApplication([])
-    win = MainWindow()
-    win.show()
-    sys.exit(app.exec_())

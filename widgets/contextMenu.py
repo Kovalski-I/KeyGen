@@ -1,3 +1,9 @@
+'''
+This class implements context menu which appears when the crown button
+on the main window is clicked.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QMenu, QFileDialog
 
@@ -25,6 +31,9 @@ class ContextMenu(QMenu):
         self._actions = {
             id(self._changeMasterPassword): self.changeMasterPassword,
             id(self._importJson): self.importJson,
+
+            # do nothing if context menu is closed
+            # with no action selected
             id(None): lambda: None
         }
 
@@ -41,6 +50,8 @@ class ContextMenu(QMenu):
         file_name = QFileDialog.getOpenFileName(
             self.parent(), 'Open json', os.getcwd(), 'Json files (*.json)'
         )
+
+        # if file dialog is closed with no file selected
         if file_name[1] == '':
             return
 
@@ -68,6 +79,7 @@ class ContextMenu(QMenu):
         except FileNotFoundError:
             pass
 
+        # creating cards from provided .json and adding them to the scene
         for service_name, data in json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
                 service_name, data['login'], index = data['index'],

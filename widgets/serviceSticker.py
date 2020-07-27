@@ -1,3 +1,9 @@
+'''
+This class implements service card/sticker as a graphics item,
+visuals of service card are implemented in ServiceCardWidget class.
+
+'''
+
 # 3rd party imports
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsProxyWidget, QLabel
 from PyQt5.QtCore import QRectF, QPropertyAnimation
@@ -15,6 +21,7 @@ class ServiceSticker(QGraphicsItem):
 
         self._width = 270.0
         self._height = 157.0
+
         self._color = color
         self._index = index
         self._serviceName = serviceName
@@ -29,21 +36,29 @@ class ServiceSticker(QGraphicsItem):
         self.anim = QPropertyAnimation(self.proxyWidget, b'geometry')
         self.proxyWidget.setWidget(self.widget)
 
+    '''
+    Method returns rectangle containing a position of the card
+    on graphics scene.
+    '''
     def boundingRect(self):
+
+        # getting rect of graphics view on main window
         viewRect = glob.tempList[0]
 
         min_x_padding = 20
+
+        # determining how much cards can it be in a row
         items_per_line, remainder = self.remainder_div(
             viewRect.width(),
             self._width + min_x_padding
         )
-        try:
-            x_padding = remainder / (items_per_line - 1)
-        except ZeroDivisionError:
-            x_padding = 0
+        x_padding = remainder / (items_per_line - 1)
         y_padding = 40
 
+        # number of row
         y_counter = 0
+        # item's position from top top left corner to bottom right corner
+        # from left to right
         line_pos = len(self.mainWindow().scene().serviceCards()) - self._index
         while True:
             if items_per_line - line_pos >= 0:
@@ -59,13 +74,13 @@ class ServiceSticker(QGraphicsItem):
             self._width, self._height
         )
 
+    '''
+    This method sets position of a proxy widget
+    '''
     def paint(self, painter, option, widget):
         self.proxyWidget.setPos(
             self.boundingRect().x(), self.boundingRect().y()
         )
-
-    def setIndex(self, index):
-        self._index = index
 
     def data(self):
         return {
@@ -75,6 +90,9 @@ class ServiceSticker(QGraphicsItem):
             'color': self._color,
             'password': self._password
         }
+
+    def parent(self):
+        return self._parent
 
     def mainWindow(self):
         return self._parent

@@ -65,7 +65,7 @@ class SetWindow(QDialog):
         self.messageBox.show()
 
     def dumpToJson(self):
-        json_data = json.loads(open('keygen.json', 'rt').read())
+        json_data = self.parent().json()
         encoded_password =  base64.b64encode(
             self.masterPasswordEdit.text().encode()
         )
@@ -75,7 +75,7 @@ class SetWindow(QDialog):
         json_data['firstOpen'] = False
 
         buffer = open('keygen.json', 'wt')
-        buffer.write(json.dumps(json_data, sort_keys = False, indent = 2))
+        buffer.write(json.dumps(json_data, sort_keys = False, indent = 4))
         buffer.close()
 
     def buttonAnimFinished(self):
@@ -83,11 +83,3 @@ class SetWindow(QDialog):
 
     def closeEvent(self, ev):
         ev.accept() if self.requirements_passed else self.parent().close()
-
-if __name__ == '__main__':
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    app = QApplication([])
-    win = GreetWindow()
-    win.show()
-    sys.exit(app.exec_())
