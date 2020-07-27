@@ -76,6 +76,7 @@ class ContextMenu(QMenu):
         json_data['serviceCards'] = {}
         try:
             json_data = json.loads(open(filename, 'rt').read())
+            mainWindow.json_data = json_data
         except FileNotFoundError:
             pass
 
@@ -83,7 +84,8 @@ class ContextMenu(QMenu):
         for service_name, data in json_data['serviceCards'].items():
             serviceSticker = ServiceSticker(
                 service_name, data['login'], index = data['index'],
-                password = data['password'], color = data['color']
+                password = data['password'], color = data['color'],
+                parent = mainWindow
             )
             scene.addItem(serviceSticker)
 
