@@ -13,18 +13,20 @@ from PyQt5 import uic
 import os
 
 # local imports
-import glob
+from globalf import Glob
 
-class MessageBox(QDialog):
+# ui
+from ui.messageBox import Ui_Dialog
+
+class MessageBox(QDialog, Ui_Dialog):
     def __init__(self, parent, closable = True):
         super().__init__(parent = parent)
         self.setParent(parent)
+
+        self.setupUi(self)
         self.setModal(True)
 
         self.closable = closable
-
-        # loading ui from ui/messageBox.ui
-        uic.loadUi(os.getcwd() + '\\ui\\messageBox.ui', self)
 
         # creating button click animation
         self.anim = QPropertyAnimation(self.pushButton, b'geometry')
@@ -36,7 +38,7 @@ class MessageBox(QDialog):
         )
 
     def pushButtonClicked(self):
-        glob.doAnimation(self.anim, self.pushButton, 4)
+        Glob.doAnimation(self.anim, self.pushButton, 4)
 
         self.close()
 

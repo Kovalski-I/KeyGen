@@ -15,14 +15,17 @@ import os
 
 # local imports
 from windows.addWindow import AddWindow
+from globalf import Glob
 import resources
-import glob
 
-class ServiceCardWidget(QWidget):
+# ui
+from ui.serviceCardWidget import Ui_Form
+
+class ServiceCardWidget(QWidget, Ui_Form):
     def __init__(self, serviceName, login, color, parent):
         super().__init__()
 
-        uic.loadUi(os.getcwd() + '\\ui\\serviceCardWidget.ui', self)
+        self.setupUi(self)
 
         self.setMinimumSize(210, 135)
         self.setMaximumSize(350, 200)
@@ -86,7 +89,7 @@ class ServiceCardWidget(QWidget):
         self.opacityAnimation.start()
 
     def editToolButtonClicked(self):
-        glob.doAnimation(self.editToolButtonAnim, self.editToolButton, 4)
+        Glob.doAnimation(self.editToolButtonAnim, self.editToolButton, 4)
 
         # showing addWindow but with the contents of service card
         stickerData = self.parent().data()
@@ -109,7 +112,7 @@ class ServiceCardWidget(QWidget):
         self.changeWindow.show()
 
     def copyToolButtonClicked(self):
-        glob.doAnimation(self.copyToolButtonAnim, self.copyToolButton, 4)
+        Glob.doAnimation(self.copyToolButtonAnim, self.copyToolButton, 4)
 
         # putting password to exchange buffer
         QApplication.clipboard().setText(
@@ -117,7 +120,7 @@ class ServiceCardWidget(QWidget):
         )
 
     def deleteToolButtonClicked(self):
-        glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
+        Glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
         self.doOpacityAnimation()
 
         # calling delete() of GraphicsScene when animation's finished

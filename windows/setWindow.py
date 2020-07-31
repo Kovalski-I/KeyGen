@@ -10,14 +10,16 @@ import os
 
 # local imports
 from widgets.messageBox import MessageBox
-import glob
+from globalf import Glob
 
-class SetWindow(QDialog):
+# ui
+from ui.setWindow import Ui_Dialog
+
+class SetWindow(QDialog, Ui_Dialog):
     def __init__(self, parent, closable = False):
         super().__init__(parent = parent)
 
-        # loading ui from ui\greetWindow.ui
-        uic.loadUi(os.getcwd() + "\\ui\\setWindow.ui", self)
+        self.setupUi(self)
 
         self.setWindowTitle('Set Master Password')
         self.setModal(True)
@@ -37,7 +39,7 @@ class SetWindow(QDialog):
         self.buttonAnim.finished.connect(self.buttonAnimFinished)
 
     def pushButtonClicked(self):
-        glob.doAnimation(self.buttonAnim, self.pushButton, 4)
+        Glob.doAnimation(self.buttonAnim, self.pushButton, 4)
 
         masterPasswordText = self.masterPasswordEdit.text()
         confirmMasterPasswordText = self.confirmMasterPasswordEdit.text()

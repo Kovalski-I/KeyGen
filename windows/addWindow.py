@@ -16,14 +16,17 @@ import os
 
 # local imports
 from widgets.messageBox import MessageBox
+from globalf import Glob
 import resources
-import glob
 
-class AddWindow(QDialog):
+# ui
+from ui.addWindow import Ui_Dialog
+
+class AddWindow(QDialog, Ui_Dialog):
     def __init__(self, parent = None, edit = False, card = None):
         super().__init__(parent = parent)
 
-        uic.loadUi(os.getcwd() + "\\ui\\addWindow.ui", self)
+        self.setupUi(self)
 
         self._edit = edit
         self._card = card
@@ -71,7 +74,7 @@ class AddWindow(QDialog):
         )
 
     def caseToolButtonClicked(self):
-        glob.doAnimation(self.caseToolButtonAnim, self.caseToolButton, 4)
+        Glob.doAnimation(self.caseToolButtonAnim, self.caseToolButton, 4)
 
         text = self.passwordEdit.text()
         if self.upper:
@@ -84,7 +87,7 @@ class AddWindow(QDialog):
         self.passwordEdit.setText(text)
 
     def keyToolButtonClicked(self):
-        glob.doAnimation(self.keyToolButtonAnim, self.keyToolButton, 4)
+        Glob.doAnimation(self.keyToolButtonAnim, self.keyToolButton, 4)
 
         convenient_symbols = ''
 
@@ -108,7 +111,7 @@ class AddWindow(QDialog):
     This method changes background color of an add window.
     '''
     def brushToolButtonClicked(self):
-        glob.doAnimation(self.brushToolButtonAnim, self.brushToolButton, 4)
+        Glob.doAnimation(self.brushToolButtonAnim, self.brushToolButton, 4)
 
         colors = self.colors().copy()
         colors.remove(self.currentColor())
@@ -154,7 +157,7 @@ class AddWindow(QDialog):
 
         if self.isEdit():
             index_ = self.editedCard().data()['index']
-            mainWindow.scene().delete(index_)
+            mainWindow.scene().removeItem(self.editedCard())
         else:
             index_ = len(mainWindow.scene().serviceCards())
 

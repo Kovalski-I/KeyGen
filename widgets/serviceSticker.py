@@ -10,10 +10,10 @@ from PyQt5.QtCore import QRectF, QPropertyAnimation
 
 # python imports
 import random
+import math
 
 # local imports
 from widgets.serviceCardWidget import ServiceCardWidget
-import glob
 
 class ServiceSticker(QGraphicsItem):
     def __init__(self, serviceName, login, index, color, password, parent):
@@ -43,17 +43,17 @@ class ServiceSticker(QGraphicsItem):
     def boundingRect(self):
 
         # getting rect of graphics view on main window
-        viewRect = glob.tempList[0]
+        viewRect = QRectF(self.parent().graphicsView.geometry())
 
-        min_x_padding = 20
+        min_x_padding = 20.0
 
         # determining how much cards can it be in a row
         items_per_line, remainder = self.remainder_div(
-            viewRect.width(),
-            self._width + min_x_padding
+            viewRect.width(), self._width + min_x_padding
         )
+
         x_padding = remainder / (items_per_line - 1)
-        y_padding = 40
+        y_padding = 40.0
 
         # number of row
         y_counter = 0
@@ -94,6 +94,9 @@ class ServiceSticker(QGraphicsItem):
     def parent(self):
         return self._parent
 
+    def width(self):
+        return self._width
+
     def mainWindow(self):
         return self._parent
 
@@ -102,4 +105,4 @@ class ServiceSticker(QGraphicsItem):
 
     @staticmethod
     def remainder_div(a, b):
-        return (int(a / b), a % b)
+        return (math.floor(a / b), a % b)

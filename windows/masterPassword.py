@@ -16,14 +16,16 @@ import os
 
 # local imports
 from widgets.messageBox import MessageBox
-import glob
+from globalf import Glob
 
-class MasterPasswordWindow(QDialog):
+# ui
+from ui.masterPassword import Ui_Dialog
+
+class MasterPasswordWindow(QDialog, Ui_Dialog):
     def __init__(self, parent):
         super().__init__(parent = parent)
 
-        # reading ui from ui/masterPassword.ui
-        uic.loadUi(os.getcwd() + "\\ui\\masterPassword.ui", self)
+        self.setupUi(self)
 
         self.setWindowTitle(self.parent().windowTitle())
         self.setModal(True)
@@ -49,7 +51,7 @@ class MasterPasswordWindow(QDialog):
         )
 
     def pushButtonClicked(self):
-        glob.doAnimation(self.pushButtonAnim, self.pushButton, 4)
+        Glob.doAnimation(self.pushButtonAnim, self.pushButton, 4)
 
         json_data = json.loads(open('keygen.json', 'rt').read())
         encoded_real_password = base64.b64decode(
@@ -63,7 +65,7 @@ class MasterPasswordWindow(QDialog):
         else:
             if self.incorrect_times > 2:
                 self.hintLabel.setText(
-                    'Hint: ' + json_data['enterData']['hint']
+                    'Hint: ' + json_data['enterData']['hint']   
                 )
             self.messageBox.show()
             self.incorrect_times += 1

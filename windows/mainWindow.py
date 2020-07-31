@@ -25,15 +25,18 @@ from widgets.messageBox import MessageBox
 from windows.addWindow import AddWindow
 from windows.setWindow import SetWindow
 from windows.masterPassword import MasterPasswordWindow
+from globalf import Glob
 import resources
-import glob
 
-class MainWindow(QWidget):
+# ui
+from ui.mainWindow import Ui_mainWindow
+
+class MainWindow(QWidget, Ui_mainWindow):
     def __init__(self):
         super().__init__()
 
         # loading window ui
-        uic.loadUi(os.getcwd() + "\\ui\\mainWindow.ui", self)
+        self.setupUi(self)
 
         self.setMinimumSize(790, 410)
 
@@ -52,6 +55,7 @@ class MainWindow(QWidget):
         self._scene = GraphicsScene(parent = self)
         self.contextMenu = ContextMenu(parent = self)
         self.json_data = None
+        self.json_read = False
         self.session_approved = False
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -79,13 +83,16 @@ class MainWindow(QWidget):
         # reading json and displaying error if failed
         try:
             self.json_data = json.loads(open('keygen.json', 'rt').read())
-            self.readJson()
         except:
             messageBox = MessageBox(parent = self, closable = False)
             messageBox.messageText.setText(
-                'Cannot load keygen.json\nbecause it is corrupted'
+                'Cannot load keygen.json'
             )
             messageBox.show()
+
+            # not trying to read this json anymore
+            self.json_read = True
+
             self.scene().update()
 
     def readJson(self):
@@ -104,16 +111,12 @@ class MainWindow(QWidget):
         if self.json_data['firstOpen']:
             setPasswordWindow = SetWindow(parent = self)
             setPasswordWindow.show()
+            self.session_approved = True
         else:
             if not self.session_approved:
                 masterPasswordWindow = MasterPasswordWindow(parent = self)
                 masterPasswordWindow.show()
                 self.session_approved = True
-
-        # updating keygen.json
-        buffer = open('keygen.json', 'wt')
-        buffer.write(json.dumps(self.json_data, sort_keys = False, indent = 4))
-        buffer.close()
 
         self.scene().update()
 
@@ -137,8 +140,14 @@ class MainWindow(QWidget):
         scene.update()
         self.saveData()
 
+    def showEvent(self, ev):
+        if not self.json_read:
+            self.readJson()
+            self.json_read = True
+        else:
+            ev.accept()
+
     def paintEvent(self, ev):
-        self.writeToGlobal(QRectF(self.graphicsView.geometry()))
         self.setSceneRectangle()
 
     def setSceneRectangle(self):
@@ -187,13 +196,13 @@ class MainWindow(QWidget):
                 counter += 1
 
     def crownToolButtonClicked(self):
-        glob.doAnimation(self.crownToolButtonAnim, self.crownToolButton, 3)
+        Glob.doAnimation(self.crownToolButtonAnim, self.crownToolButton, 3)
 
         chosen_action = self.contextMenu.exec_(self.calculateCoordinates())
         self.contextMenu.executeAction(chosen_action)
 
     def plusToolButtonClicked(self):
-        glob.doAnimation(self.plusToolButtonAnim, self.plusToolButton, 3)
+        Glob.doAnimation(self.plusToolButtonAnim, self.plusToolButton, 3)
 
         addWindow = AddWindow(parent = self)
         addWindow.show()
@@ -235,7 +244,3 @@ class MainWindow(QWidget):
 
     def json(self):
         return self.json_data
-
-    @staticmethod
-    def writeToGlobal(data):
-        glob.tempList[0] = data

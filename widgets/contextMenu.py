@@ -15,7 +15,6 @@ import os
 from windows.setWindow import SetWindow
 from widgets.messageBox import MessageBox
 from widgets.serviceSticker import ServiceSticker
-import glob
 
 class ContextMenu(QMenu):
     def __init__(self, parent):
