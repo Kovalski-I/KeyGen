@@ -1,5 +1,4 @@
 __pycache__/
-concepts/
 resources/
 inno/
 build/
@@ -7,6 +6,8 @@ dist/
 qtdesigner/
 
 *.spec
+addWindow.png
+General_view.png
 structure.txt
 resources.qrc
 style.qss

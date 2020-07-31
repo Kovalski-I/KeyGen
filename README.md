@@ -1,3 +1,2 @@
 # KeyGen
-Simple and stylish password keeper and generator.
-The project is currently being developed.
+Cards based password storer and generator.
