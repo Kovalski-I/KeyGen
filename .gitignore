@@ -2,9 +2,11 @@ __pycache__/
 concepts/
 resources/
 inno/
-src/
+build/
+dist/
 qtdesigner/
 
+*.spec
 structure.txt
 resources.qrc
 style.qss
