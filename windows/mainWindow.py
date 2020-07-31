@@ -188,7 +188,10 @@ class MainWindow(QWidget, Ui_mainWindow):
             if re.match(req, name.lower()) is not None:
                 newCard = ServiceSticker(
                     name, data['login'],
-                    color = data['color'], password = data['password'],
+                    color = data['color'],
+                    password = base64.b64decode(
+                        data['password'].encode()
+                    ).decode(),
                     index = counter, parent = self
                 )
                 scene.addItem(newCard)
