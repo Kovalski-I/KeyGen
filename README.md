@@ -19,6 +19,9 @@ From the project's directory:
 
 Some resources of the app are compiled into binaries and stored in resources_rc.py file, but **Quicksand Medium** and **Quicksand Reqular** fonts used by the app are installed only while instalation proccess performed by installer. To get the same output by running py main.py you should install **Quicksand Medium** and **Quicksand Reqular** fonts by putting the .ttf files to *C:\Windows\Fonts*.
 
+## Reporting a bug
+Bugs can be reported through ["Bug reports" page](https://sourceforge.net/p/kovalskii-keygen/discussion/bugreports/) of sourceforge.
+
 ## Current project state
 Stable: KeyGen 1.0
 
