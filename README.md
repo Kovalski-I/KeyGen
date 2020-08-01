@@ -12,6 +12,9 @@ The app can be got from [KeyGen sourceforge page](https://sourceforge.net/projec
 
 ## Executing the code
 From the project's directory:
+
+```$ pip install requirements.txt```
+
 ```$ py main.py ```
 
 Some resources of the app are compiled into binaries and stored in resources_rc.py file, but **Quicksand Medium** and **Quicksand Reqular** fonts used by the app are installed only while instalation proccess performed by installer. To get the same output by running py main.py you should install **Quicksand Medium** and **Quicksand Reqular** fonts by putting the .ttf files to *C:\Windows\Fonts*.
