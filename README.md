@@ -1,10 +1,7 @@
-# KeyGen
+# KeyGen [![Download KeyGen](https://img.shields.io/sourceforge/dt/kovalskii-keygen.svg)](https://sourceforge.net/projects/kovalskii-keygen/files/latest/download)
 Cards based password storer and generator for Windows.
 
 [![Download KeyGen](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/kovalskii-keygen/files/latest/download)
-
-[![Download KeyGen](https://img.shields.io/sourceforge/dt/kovalskii-keygen.svg)](https://sourceforge.net/projects/kovalskii-keygen/files/latest/download)
-
 ![Usage scenario](concepts/keygen.gif)
 
 ## Getting the app 
