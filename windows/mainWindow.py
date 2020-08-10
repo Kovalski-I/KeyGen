@@ -16,6 +16,7 @@ import base64
 import json
 import re
 import os
+import random
 
 # local imports
 from widgets.contextMenu import ContextMenu
@@ -104,7 +105,8 @@ class MainWindow(QWidget, Ui_mainWindow):
                     data['password'].encode()
                 ).decode(),
                 color = data['color'],
-                parent = self
+                parent = self,
+                number = data['number']
             )
             self.scene().addItem(serviceSticker)
 
@@ -122,19 +124,22 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def addServiceCard(self, name, login, index, color, password):
         scene = self.scene()
+        number = random.randint(0, 100000)
         serviceCard = ServiceSticker(
             name, login,
             index = index,
             password = password,
             color = color,
-            parent = self
+            parent = self,
+            number = number
         )
         scene.addItem(serviceCard)
         self.json_data['serviceCards'][name] = {
             'index': index,
             'login': login,
             'color': color,
-            'password': base64.b64encode(password.encode()).decode()
+            'password': base64.b64encode(password.encode()).decode(),
+            'number': number
         }
 
         scene.update()
