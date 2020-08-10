@@ -189,15 +189,16 @@ class MainWindow(QWidget, Ui_mainWindow):
             return
 
         counter = 0
-        for name, data in self.json_data['serviceCards'].items():
-            if re.match(req, name.lower()) is not None:
+        for number, data in self.json_data['number'].items():
+            if re.match(req, data['serviceName'].lower()) is not None:
                 newCard = ServiceSticker(
-                    name, data['login'],
+                    data['serviceName'], data['login'],
                     color = data['color'],
                     password = base64.b64decode(
                         data['password'].encode()
                     ).decode(),
-                    index = counter, parent = self
+                    index = counter, parent = self,
+                    number = number
                 )
                 scene.addItem(newCard)
                 scene.update()
