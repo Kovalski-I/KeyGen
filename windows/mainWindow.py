@@ -98,15 +98,15 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def readJson(self):
         # creating cards from data of json
-        for service_name, data in self.json_data['serviceCards'].items():
+        for number, data in self.json_data['number'].items():
             serviceSticker = ServiceSticker(
-                service_name, data['login'], index = data['index'],
+                data['serviceName'], data['login'], index = data['index'],
                 password = base64.b64decode(
                     data['password'].encode()
                 ).decode(),
                 color = data['color'],
                 parent = self,
-                number = data['number']
+                number = number
             )
             self.scene().addItem(serviceSticker)
 
@@ -134,12 +134,12 @@ class MainWindow(QWidget, Ui_mainWindow):
             number = number
         )
         scene.addItem(serviceCard)
-        self.json_data['serviceCards'][name] = {
+        self.json_data['number'][number] = {
+            'serviceName': name,
             'index': index,
             'login': login,
             'color': color,
             'password': base64.b64encode(password.encode()).decode(),
-            'number': number
         }
 
         scene.update()
