@@ -98,7 +98,7 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def readJson(self):
         # creating cards from data of json
-        for number, data in self.json_data['number'].items():
+        for id, data in self.json_data['id'].items():
             serviceSticker = ServiceSticker(
                 data['serviceName'], data['login'], index = data['index'],
                 password = base64.b64decode(
@@ -106,7 +106,7 @@ class MainWindow(QWidget, Ui_mainWindow):
                 ).decode(),
                 color = data['color'],
                 parent = self,
-                number = number
+                id = id
             )
             self.scene().addItem(serviceSticker)
 
@@ -124,17 +124,18 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def addServiceCard(self, name, login, index, color, password):
         scene = self.scene()
-        number = random.randint(0, 100000)
+        random.seed()
+        id = random.randint(0, 100000000000000000) #should be reworked
         serviceCard = ServiceSticker(
             name, login,
             index = index,
             password = password,
             color = color,
             parent = self,
-            number = number
+            id = id
         )
         scene.addItem(serviceCard)
-        self.json_data['number'][number] = {
+        self.json_data['id'][id] = {
             'serviceName': name,
             'index': index,
             'login': login,
@@ -189,7 +190,7 @@ class MainWindow(QWidget, Ui_mainWindow):
             return
 
         counter = 0
-        for number, data in self.json_data['number'].items():
+        for id, data in self.json_data['id'].items():
             if re.match(req, data['serviceName'].lower()) is not None:
                 newCard = ServiceSticker(
                     data['serviceName'], data['login'],
@@ -198,7 +199,7 @@ class MainWindow(QWidget, Ui_mainWindow):
                         data['password'].encode()
                     ).decode(),
                     index = counter, parent = self,
-                    number = number
+                    id = id
                 )
                 scene.addItem(newCard)
                 scene.update()
