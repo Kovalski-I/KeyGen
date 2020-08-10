@@ -61,11 +61,11 @@ class GraphicsScene(QGraphicsScene):
     them to the scene.
     '''
     def delete(self, index):
-        serviceCards = self.parent().json()['serviceCards']
+        serviceCards = self.parent().json()['number']
 
-        for name, data in serviceCards.items():
+        for number, data in serviceCards.items():
             if data['index'] == index:
-                serviceCards.pop(name)
+                serviceCards.pop(number)
                 break
 
         self.serviceCards().clear()
@@ -73,14 +73,16 @@ class GraphicsScene(QGraphicsScene):
 
         counter = 0
         json_data = self.parent().json()
-        for name, data in serviceCards.items():
+        for number, data in serviceCards.items():
             newCard = ServiceSticker(
-                name, data['login'],
+                data['serviceName'], data['login'],
                 color = data['color'], password = data['password'],
-                index = counter, parent = self.parent()
+                index = counter, parent = self.parent(),
+                number = number
             )
 
-            json_data['serviceCards'][name] = {
+            json_data['number'][number] = {
+                'serviceName': data['serviceName'],
                 'index': counter,
                 'login': data['login'],
                 'color': data['color'],
