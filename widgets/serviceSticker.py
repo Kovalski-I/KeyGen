@@ -86,6 +86,7 @@ class ServiceSticker(QGraphicsItem):
     def data(self):
         return {
             'serviceName': self._serviceName,
+            'id': self._id,
             'index': self._index,
             'login': self._login,
             'color': self._color,
