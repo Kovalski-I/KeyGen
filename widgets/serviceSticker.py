@@ -16,7 +16,7 @@ import math
 from widgets.serviceCardWidget import ServiceCardWidget
 
 class ServiceSticker(QGraphicsItem):
-    def __init__(self, serviceName, login, index, color, password, parent):
+    def __init__(self, serviceName, login, index, color, password, parent, id):
         super().__init__()
 
         self._width = 270.0
@@ -28,6 +28,7 @@ class ServiceSticker(QGraphicsItem):
         self._login = login
         self._password = password
         self._parent = parent
+        self._id = id
 
         self.widget = ServiceCardWidget(
             serviceName, login, self._color, parent = self
@@ -85,6 +86,7 @@ class ServiceSticker(QGraphicsItem):
     def data(self):
         return {
             'serviceName': self._serviceName,
+            'id': self._id,
             'index': self._index,
             'login': self._login,
             'color': self._color,

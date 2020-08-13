@@ -16,6 +16,7 @@ import base64
 import json
 import re
 import os
+import random
 
 # local imports
 from widgets.contextMenu import ContextMenu
@@ -97,14 +98,15 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def readJson(self):
         # creating cards from data of json
-        for service_name, data in self.json_data['serviceCards'].items():
+        for id, data in self.json_data['id'].items():
             serviceSticker = ServiceSticker(
-                service_name, data['login'], index = data['index'],
+                data['serviceName'], data['login'], index = data['index'],
                 password = base64.b64decode(
                     data['password'].encode()
                 ).decode(),
                 color = data['color'],
-                parent = self
+                parent = self,
+                id = id
             )
             self.scene().addItem(serviceSticker)
 
@@ -122,19 +124,23 @@ class MainWindow(QWidget, Ui_mainWindow):
 
     def addServiceCard(self, name, login, index, color, password):
         scene = self.scene()
+        random.seed()
+        id = random.randint(0, 100000000000000000) #should be reworked
         serviceCard = ServiceSticker(
             name, login,
             index = index,
             password = password,
             color = color,
-            parent = self
+            parent = self,
+            id = id
         )
         scene.addItem(serviceCard)
-        self.json_data['serviceCards'][name] = {
+        self.json_data['id'][id] = {
+            'serviceName': name,
             'index': index,
             'login': login,
             'color': color,
-            'password': base64.b64encode(password.encode()).decode()
+            'password': base64.b64encode(password.encode()).decode(),
         }
 
         scene.update()
@@ -184,15 +190,16 @@ class MainWindow(QWidget, Ui_mainWindow):
             return
 
         counter = 0
-        for name, data in self.json_data['serviceCards'].items():
-            if re.match(req, name.lower()) is not None:
+        for id, data in self.json_data['id'].items():
+            if re.match(req, data['serviceName'].lower()) is not None:
                 newCard = ServiceSticker(
-                    name, data['login'],
+                    data['serviceName'], data['login'],
                     color = data['color'],
                     password = base64.b64decode(
                         data['password'].encode()
                     ).decode(),
-                    index = counter, parent = self
+                    index = counter, parent = self,
+                    id = id
                 )
                 scene.addItem(newCard)
                 scene.update()

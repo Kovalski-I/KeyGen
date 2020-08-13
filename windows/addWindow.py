@@ -158,6 +158,7 @@ class AddWindow(QDialog, Ui_Dialog):
         if self.isEdit():
             index_ = self.editedCard().data()['index']
             mainWindow.scene().removeItem(self.editedCard())
+            self.parent().json()['id'].pop(self.editedCard().data()['id'])
         else:
             index_ = len(mainWindow.scene().serviceCards())
 
