@@ -16,26 +16,27 @@ import math
 from widgets.serviceCardWidget import ServiceCardWidget
 
 class ServiceSticker(QGraphicsItem):
-    def __init__(self, serviceName, login, index, color, password, parent, id):
+    def __init__(self, name, login, pos, color, password, mainWindow, id):
         super().__init__()
 
         self._width = 270.0
         self._height = 157.0
 
         self._color = color
-        self._index = index
-        self._serviceName = serviceName
+        self._pos = pos
+        self._name = name
         self._login = login
         self._password = password
-        self._parent = parent
+        self._mainWindow = mainWindow
         self._id = id
 
         self.widget = ServiceCardWidget(
-            serviceName, login, self._color, parent = self
+            name, login, self._color, parent = self
         )
         self.proxyWidget = QGraphicsProxyWidget(self)
-        self.anim = QPropertyAnimation(self.proxyWidget, b'geometry')
         self.proxyWidget.setWidget(self.widget)
+
+        self.anim = QPropertyAnimation(self.proxyWidget, b'geometry')
 
     '''
     Method returns rectangle containing a position of the card
@@ -44,7 +45,7 @@ class ServiceSticker(QGraphicsItem):
     def boundingRect(self):
 
         # getting rect of graphics view on main window
-        viewRect = QRectF(self.parent().graphicsView.geometry())
+        viewRect = QRectF(self.mainWindow().graphicsView.geometry())
 
         min_x_padding = 20.0
 
@@ -58,9 +59,11 @@ class ServiceSticker(QGraphicsItem):
 
         # number of row
         y_counter = 0
+
         # item's position from top top left corner to bottom right corner
         # from left to right
-        line_pos = len(self.mainWindow().scene().serviceCards()) - self._index
+        line_pos = self._pos + 1
+
         while True:
             if items_per_line - line_pos >= 0:
                 x_counter = line_pos - 1
@@ -85,22 +88,19 @@ class ServiceSticker(QGraphicsItem):
 
     def data(self):
         return {
-            'serviceName': self._serviceName,
+            'name': self._name,
             'id': self._id,
-            'index': self._index,
+            'pos': self._pos,
             'login': self._login,
             'color': self._color,
             'password': self._password
         }
 
-    def parent(self):
-        return self._parent
+    def mainWindow(self):
+        return self._mainWindow
 
     def width(self):
         return self._width
-
-    def mainWindow(self):
-        return self._parent
 
     def getWidget(self):
         return self.widget

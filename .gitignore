@@ -13,3 +13,5 @@ resources.qrc
 style.qss
 test.json
 script.py
+Pipfile
+Pipfile.lock

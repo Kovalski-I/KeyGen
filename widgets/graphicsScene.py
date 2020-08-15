@@ -7,6 +7,9 @@ where all colored service cards are placed in.
 # 3rd party imports
 from PyQt5.QtWidgets import QGraphicsScene, QLabel
 
+# python imports
+import base64
+
 # local imports
 from widgets.serviceSticker import ServiceSticker
 
@@ -34,66 +37,43 @@ class GraphicsScene(QGraphicsScene):
         item.getWidget().doOpacityAnimation()
         super().addItem(item)
 
-    '''
-    This method determines if there are cards on the scene: updates
-    serviceCards list or shows no cards label.
-    '''
-    def update(self):
-        self._serviceCards = []
-        for item in self.items():
-            if item.__class__.__name__ == 'ServiceSticker':
-                self.serviceCards().append(item)
+    def fill_with_cards(self):
+        mainWindow = self.parent()
+        scene = mainWindow.scene()
+        json_data = mainWindow.json()
 
-        if len(self.serviceCards()) != 0:
-            self.removeItem(self.noCardsTextProxy)
-        else:
+        scene.clear()
+
+        counter = 0
+        for id, data in reversed(json_data['id'].items()):
+            card = ServiceSticker(
+                id = id, pos = counter,
+                name = data['name'],
+                login = data['login'],
+                color = data['color'],
+                password = base64.b64decode(data['password'].encode()).decode(),
+                mainWindow = mainWindow
+            )
+            scene.addItem(card)
+            counter += 1
+
+        if counter == 0:
             label = QLabel(
                 'There are no cards\n' + 'Click "+" to add service card'
             )
-            label.setStyleSheet(self.labelStyleSheet)
+            label.setStyleSheet(
+                '''
+                QLabel{
+                    font-family: Quicksand;
+                    background-color: #212121;
+                    font-size: 36px;
+                    color: #fafafa;
+                }
+                '''
+            )
             self.noCardsTextProxy = self.addWidget(label)
 
-        super().update()
-
-    '''
-    The method deletes service card with given index from the
-    scene, creates remaining cards assigning them new indexes and adds
-    them to the scene.
-    '''
-    def delete(self, index):
-        serviceCards = self.parent().json()['id']
-
-        for number, data in serviceCards.items():
-            if data['index'] == index:
-                serviceCards.pop(number)
-                break
-
-        self.serviceCards().clear()
-        self.clear()
-
-        counter = 0
-        json_data = self.parent().json()
-        for id, data in serviceCards.items():
-            newCard = ServiceSticker(
-                data['serviceName'], data['login'],
-                color = data['color'], password = data['password'],
-                index = counter, parent = self.parent(),
-                id = id
-            )
-
-            json_data['id'][id] = {
-                'serviceName': data['serviceName'],
-                'index': counter,
-                'login': data['login'],
-                'color': data['color'],
-                'password': data['password']
-            }
-            self.addItem(newCard)
-
-            counter += 1
-
-        self.parent().saveData()
-        self.update()
+        scene.update()
 
     def serviceCards(self):
         return self._serviceCards

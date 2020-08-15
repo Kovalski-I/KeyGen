@@ -11,6 +11,7 @@ from PyQt5 import uic
 
 # python imports
 import string
+import base64
 import random
 import os
 
@@ -154,23 +155,28 @@ class AddWindow(QDialog, Ui_Dialog):
             return
 
         mainWindow = self.parent()
+        scene = mainWindow.scene()
+        json_data = mainWindow.json()
 
         if self.isEdit():
-            index_ = self.editedCard().data()['index']
-            mainWindow.scene().removeItem(self.editedCard())
-            self.parent().json()['id'].pop(self.editedCard().data()['id'])
+            id = self.editedCard().data()['id']
         else:
-            index_ = len(mainWindow.scene().serviceCards())
+            # propability of the same id in new card is present
+            id = random.randint(0, 100000000000000000)
 
-        mainWindow.addServiceCard(
-            name = self.serviceEdit.text().strip(),
-            login = self.loginEdit.text().strip(),
-            index = index_,
-            color = self.currentColor(),
-            password = self.passwordEdit.text()
-        )
+        json_data['id'][id] = {
+            'name': self.serviceEdit.text().strip(),
+            'login': self.loginEdit.text().strip(),
+            'color': self.currentColor(),
+            'password': base64.b64encode(
+                self.passwordEdit.text().encode()
+            ).decode()
+        }
 
         self.close()
+
+        scene.fill_with_cards()
+        mainWindow.saveData()
 
     def isEdit(self):
         return self._edit

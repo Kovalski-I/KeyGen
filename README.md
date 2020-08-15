@@ -4,13 +4,13 @@ Cards based password storer and generator for Windows.
 [![Download KeyGen](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/kovalskii-keygen/files/latest/download)
 ![Usage scenario](concepts/keygen.gif)
 
-## Getting the app 
+## Getting the app
 The app can be got from [KeyGen sourceforge page](https://sourceforge.net/projects/kovalskii-keygen) for user purposes. Antivirus may sometimes treat the installer and the main executable file of the app as virus due to the absence of publisher's digital sign. **It is recommended to turn off antivirus during the instalation proccess,** but it is up to you to decide.
 
 ## Executing the code
 From the project's directory:
 
-```$ pip install requirements.txt```
+```$ pip install -r requirements.txt```
 
 ```$ py main.py ```
 

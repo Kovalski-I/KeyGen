@@ -94,13 +94,13 @@ class ServiceCardWidget(QWidget, Ui_Form):
         # showing addWindow but with the contents of service card
         stickerData = self.parent().data()
 
-        mainWindow = self.parent().parent()
+        mainWindow = self.parent().mainWindow()
 
         self.changeWindow = AddWindow(
             parent = mainWindow, edit = True, card = self.parent()
         )
         self.changeWindow.serviceEdit.setText(
-            stickerData['serviceName']
+            stickerData['name']
         )
         self.changeWindow.loginEdit.setText(
             stickerData['login']
@@ -123,12 +123,19 @@ class ServiceCardWidget(QWidget, Ui_Form):
         Glob.doAnimation(self.deleteToolButtonAnim, self.deleteToolButton, 4)
         self.doOpacityAnimation()
 
-        # calling delete() of GraphicsScene when animation's finished
+        mainWindow = self.parent().mainWindow()
+        scene = mainWindow.scene()
+
+        item_data = self.parent().data()
+        json_data = mainWindow.json()
+
+        json_data['id'].pop(item_data['id'])
+
         self.opacityAnimation.finished.connect(
-            lambda: self.parent().scene().delete(
-                self.parent().data()['index']
-            )
+            lambda: scene.fill_with_cards()
         )
+
+        mainWindow.saveData()
 
     def parent(self):
         return self._parent

@@ -56,8 +56,7 @@ class MainWindow(QWidget, Ui_mainWindow):
         self._scene = GraphicsScene(parent = self)
         self.contextMenu = ContextMenu(parent = self)
         self.json_data = None
-        self.json_read = False
-        self.session_approved = False
+        self.json_is_read = False
 
         self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.graphicsView.setScene(self._scene)
@@ -91,65 +90,26 @@ class MainWindow(QWidget, Ui_mainWindow):
             )
             messageBox.show()
 
-            # not trying to read this json anymore
-            self.json_read = True
-
-            self.scene().update()
+            # not trying to access json data anymore
+            self.json_is_read = True
 
     def readJson(self):
+        scene = self.scene()
+
         # creating cards from data of json
-        for id, data in self.json_data['id'].items():
-            serviceSticker = ServiceSticker(
-                data['serviceName'], data['login'], index = data['index'],
-                password = base64.b64decode(
-                    data['password'].encode()
-                ).decode(),
-                color = data['color'],
-                parent = self,
-                id = id
-            )
-            self.scene().addItem(serviceSticker)
+        scene.fill_with_cards()
 
         if self.json_data['firstOpen']:
             setPasswordWindow = SetWindow(parent = self)
             setPasswordWindow.show()
-            self.session_approved = True
         else:
-            if not self.session_approved:
-                masterPasswordWindow = MasterPasswordWindow(parent = self)
-                masterPasswordWindow.show()
-                self.session_approved = True
-
-        self.scene().update()
-
-    def addServiceCard(self, name, login, index, color, password):
-        scene = self.scene()
-        random.seed()
-        id = random.randint(0, 100000000000000000) #should be reworked
-        serviceCard = ServiceSticker(
-            name, login,
-            index = index,
-            password = password,
-            color = color,
-            parent = self,
-            id = id
-        )
-        scene.addItem(serviceCard)
-        self.json_data['id'][id] = {
-            'serviceName': name,
-            'index': index,
-            'login': login,
-            'color': color,
-            'password': base64.b64encode(password.encode()).decode(),
-        }
-
-        scene.update()
-        self.saveData()
+            masterPasswordWindow = MasterPasswordWindow(parent = self)
+            masterPasswordWindow.show()
 
     def showEvent(self, ev):
-        if not self.json_read:
+        if not self.json_is_read:
             self.readJson()
-            self.json_read = True
+            self.json_is_read = True
         else:
             ev.accept()
 
@@ -186,23 +146,22 @@ class MainWindow(QWidget, Ui_mainWindow):
         self.scene().clear()
 
         if req == '':
-            self.readJson()
+            self.scene().fill_with_cards()
             return
 
         counter = 0
-        for id, data in self.json_data['id'].items():
-            if re.match(req, data['serviceName'].lower()) is not None:
+        for id, data in reversed(self.json_data['id'].items()):
+            if re.match(req, data['name'].lower()) is not None:
                 newCard = ServiceSticker(
-                    data['serviceName'], data['login'],
+                    data['name'], data['login'],
                     color = data['color'],
                     password = base64.b64decode(
                         data['password'].encode()
                     ).decode(),
-                    index = counter, parent = self,
+                    pos = counter, mainWindow = self,
                     id = id
                 )
                 scene.addItem(newCard)
-                scene.update()
                 counter += 1
 
     def crownToolButtonClicked(self):
@@ -245,9 +204,6 @@ class MainWindow(QWidget, Ui_mainWindow):
         stream = open('keygen.json', 'wt')
         stream.write(json.dumps(self.json_data, sort_keys = False, indent = 4))
         stream.close()
-
-    def closeEvent(self, ev):
-        self.saveData()
 
     def scene(self):
         return self._scene
