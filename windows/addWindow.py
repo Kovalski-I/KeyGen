@@ -32,13 +32,15 @@ class AddWindow(QDialog, Ui_Dialog):
         self._edit = edit
         self._card = card
         self._colors = ['#244f26', '#875307', '#01434b', '#902c25', '#4f6670']
-        self.color = random.choice(self._colors)
+        self.color = None
         self.upper = True
 
         if self.isEdit():
-            self.setBackground(self.editedCard().data()['color'])
+            self.color = self.editedCard().data()['color']
         else:
-            self.setBackground(self.color)
+            self.color = random.choice(self._colors)
+            
+        self.setBackground(self.color)
 
         if self.isEdit():
             self.setWindowTitle('Editing Service Card')
