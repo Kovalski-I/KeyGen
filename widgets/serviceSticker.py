@@ -99,9 +99,6 @@ class ServiceSticker(QGraphicsItem):
     def mainWindow(self):
         return self._mainWindow
 
-    def width(self):
-        return self._width
-
     def getWidget(self):
         return self.widget
 

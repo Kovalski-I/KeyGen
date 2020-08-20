@@ -69,23 +69,9 @@ class ContextMenu(QMenu):
     @staticmethod
     def readJson(filename, mainWindow):
         scene = mainWindow.scene()
-        scene.clear()
 
-        json_data = {}
-        json_data['serviceCards'] = {}
-        try:
-            json_data = json.loads(open(filename, 'rt').read())
-            mainWindow.json_data = json_data
-        except FileNotFoundError:
-            pass
+        json_data = json.loads(open(filename, 'rt').read())
+        mainWindow.json_data = json_data
+        mainWindow.saveData()
 
-        # creating cards from provided .json and adding them to the scene
-        for service_name, data in json_data['serviceCards'].items():
-            serviceSticker = ServiceSticker(
-                service_name, data['login'], index = data['index'],
-                password = data['password'], color = data['color'],
-                parent = mainWindow
-            )
-            scene.addItem(serviceSticker)
-
-        scene.update()
+        scene.fill_with_cards()

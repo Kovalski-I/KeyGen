@@ -16,17 +16,7 @@ from widgets.serviceSticker import ServiceSticker
 class GraphicsScene(QGraphicsScene):
     def __init__(self, parent):
         super().__init__()
-
-        self.labelStyleSheet = '''QLabel{
-               font-family: Quicksand;
-               background-color: #212121;
-               font-size: 36px;
-               color: #fafafa;
-           }'''
-
-        # list which all service cards on the scene are added to
-        self._serviceCards = []
-
+        
         self._parent = parent
 
         # label which is shown when there are no cards on the scene
@@ -74,9 +64,6 @@ class GraphicsScene(QGraphicsScene):
             self.noCardsTextProxy = self.addWidget(label)
 
         scene.update()
-
-    def serviceCards(self):
-        return self._serviceCards
 
     def parent(self):
         return self._parent

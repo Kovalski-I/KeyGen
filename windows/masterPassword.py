@@ -53,7 +53,7 @@ class MasterPasswordWindow(QDialog, Ui_Dialog):
     def pushButtonClicked(self):
         Glob.doAnimation(self.pushButtonAnim, self.pushButton, 4)
 
-        json_data = json.loads(open('keygen.json', 'rt').read())
+        json_data = self.parent().json()
         encoded_real_password = base64.b64decode(
             json_data['enterData']['masterPassword'].encode()
         )
@@ -65,7 +65,7 @@ class MasterPasswordWindow(QDialog, Ui_Dialog):
         else:
             if self.incorrect_times > 2:
                 self.hintLabel.setText(
-                    'Hint: ' + json_data['enterData']['hint']   
+                    'Hint: ' + json_data['enterData']['hint']
                 )
             self.messageBox.show()
             self.incorrect_times += 1
