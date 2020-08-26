@@ -20,7 +20,7 @@ Some resources of the app are compiled into binaries and stored in resources_rc.
 Bugs can be reported through ["Bug reports" page](https://sourceforge.net/p/kovalskii-keygen/discussion/bugreports/) of sourceforge.
 
 ## Current project state
-Stable: KeyGen 1.0
+Stable: KeyGen 1.1
 
 ## Made with
 - PyQt5
