@@ -35,9 +35,9 @@ class GraphicsScene(QGraphicsScene):
         scene.clear()
 
         counter = 0
-        for id, data in reversed(json_data['id'].items()):
+        for unigue_id, data in reversed(json_data['id'].items()):
             card = ServiceSticker(
-                id = id, pos = counter,
+                id = unigue_id, pos = counter,
                 name = data['name'],
                 login = data['login'],
                 color = data['color'],

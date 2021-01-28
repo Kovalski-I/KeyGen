@@ -1,6 +1,6 @@
 # 3rd party imports
-from PyQt5.QtWidgets import QDialog, QMessageBox
-from PyQt5.QtCore import QPropertyAnimation, Qt
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtCore import QPropertyAnimation
 from PyQt5 import uic
 
 # python imports

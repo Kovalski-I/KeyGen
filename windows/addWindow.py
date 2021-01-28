@@ -13,6 +13,7 @@ from PyQt5 import uic
 import string
 import base64
 import random
+import sys
 import os
 
 # local imports
@@ -164,7 +165,7 @@ class AddWindow(QDialog, Ui_Dialog):
             id = self.editedCard().data()['id']
         else:
             # propability of the same id in new card is present
-            id = random.randint(0, 100000000000000000)
+            id = random.randint(0, sys.maxsize)
 
         json_data['id'][id] = {
             'name': self.serviceEdit.text().strip(),

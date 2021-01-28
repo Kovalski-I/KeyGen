@@ -3,11 +3,11 @@ Main file of the application.
 
 '''
 
-# 3rd party imports
-from PyQt5.QtWidgets import QApplication
-
 # python imports
 import sys
+
+# 3rd party imports
+from PyQt5.QtWidgets import QApplication
 
 # local imports
 from windows.mainWindow import MainWindow

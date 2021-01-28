@@ -6,17 +6,13 @@ The instance of this class is a parent to almost all other objects.
 
 
 # 3rd party imports
-from PyQt5.QtWidgets import QWidget, QGraphicsScene
-from PyQt5.QtCore import QPropertyAnimation, QRectF, QPointF, QPoint, Qt
-from PyQt5.QtGui import QPainter
-from PyQt5 import uic
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import QPropertyAnimation, QRectF, QPoint, Qt
 
 # python imports
 import base64
 import json
 import re
-import os
-import random
 
 # local imports
 from widgets.contextMenu import ContextMenu
@@ -27,7 +23,6 @@ from windows.addWindow import AddWindow
 from windows.setWindow import SetWindow
 from windows.masterPassword import MasterPasswordWindow
 from globalf import Glob
-import resources
 
 # ui
 from ui.mainWindow import Ui_mainWindow
@@ -41,7 +36,7 @@ class MainWindow(QWidget, Ui_mainWindow):
 
         self.setMinimumSize(790, 410)
 
-        PREFIX = '   ' # 3 SPACES
+        PREFIX = '   '  # 3 SPACES
 
         self.searchBar.setText(PREFIX)
 
@@ -53,8 +48,8 @@ class MainWindow(QWidget, Ui_mainWindow):
             self.plusToolButton, b'geometry'
         )
 
-        self._scene = GraphicsScene(parent = self)
-        self.contextMenu = ContextMenu(parent = self)
+        self._scene = GraphicsScene(parent=self)
+        self.contextMenu = ContextMenu(parent=self)
         self.json_data = None
         self.json_is_read = False
 
@@ -84,7 +79,7 @@ class MainWindow(QWidget, Ui_mainWindow):
         try:
             self.json_data = json.loads(open('keygen.json', 'rt').read())
         except:
-            messageBox = MessageBox(parent = self, closable = False)
+            messageBox = MessageBox(parent=self, closable=False)
             messageBox.messageText.setText(
                 'Cannot load keygen.json'
             )
@@ -100,10 +95,10 @@ class MainWindow(QWidget, Ui_mainWindow):
         scene.fill_with_cards()
 
         if self.json_data['firstOpen']:
-            setPasswordWindow = SetWindow(parent = self)
+            setPasswordWindow = SetWindow(parent=self)
             setPasswordWindow.show()
         else:
-            masterPasswordWindow = MasterPasswordWindow(parent = self)
+            masterPasswordWindow = MasterPasswordWindow(parent=self)
             masterPasswordWindow.show()
 
     def showEvent(self, ev):
@@ -150,16 +145,16 @@ class MainWindow(QWidget, Ui_mainWindow):
             return
 
         counter = 0
-        for id, data in reversed(self.json_data['id'].items()):
+        for unigue_id, data in reversed(self.json_data['id'].items()):
             if re.match(req, data['name'].lower()) is not None:
                 newCard = ServiceSticker(
                     data['name'], data['login'],
-                    color = data['color'],
-                    password = base64.b64decode(
+                    color=data['color'],
+                    password=base64.b64decode(
                         data['password'].encode()
                     ).decode(),
-                    pos = counter, mainWindow = self,
-                    id = id
+                    pos=counter, mainWindow=self,
+                    id=unigue_id
                 )
                 scene.addItem(newCard)
                 counter += 1

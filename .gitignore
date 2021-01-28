@@ -4,6 +4,8 @@ inno/
 build/
 dist/
 qtdesigner/
+.vscode/
+concepts/
 
 *.spec
 addWindow.png
